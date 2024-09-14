@@ -39,7 +39,7 @@ export function PassengerPicker({ onPassengersChange }: PassengerPickerProps) {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" className="w-[240px] justify-start text-left font-normal">
-          {adults + children} Passenger{adults + children !== 1 ? 's' : ''}
+          {adults} Adult{adults !== 1 ? 's' : ''}, {children} Child{children !== 1 ? 'ren' : ''}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">

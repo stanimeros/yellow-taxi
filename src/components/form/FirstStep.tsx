@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { DateTimePicker } from '@/components/ui/datetime-picker';
+import { DatePicker } from '@/components/ui/date-picker';
 import {GoogleMap, useLoadScript } from '@react-google-maps/api';
 import { PassengerPicker } from '../ui/passenger-picker';
 import { PlaceAutocomplete } from '../ui/place-autocomplete';
+import { TimePicker } from '../ui/time-picker';
 
 interface FirstStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -20,10 +21,12 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
 
-  useLoadScript({
+  const { isLoaded } = useLoadScript({
     googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY_HERE',
     libraries: ['places'],
   });
+
+  if (!isLoaded) return <div>Loading...</div>;
 
   return (
     <div className="flex">
@@ -44,33 +47,43 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
               placeholder="Enter end location"
             />
           </div>
-          <div>
-            <Label htmlFor="pickup">Pickup Date</Label>
-            <DateTimePicker
-              id="pickup"
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="pickup-date">Pickup Date</Label>
+            <DatePicker
+              id="pickup-date"
               selected={pickupDateTime}
               onSelect={setPickupDateTime}
             />
-          </div>
-          <div className="flex items-center space-x-2">
+            <Label htmlFor="pickup-time">Pickup Time</Label>
+            <TimePicker
+              id="pickup-time"
+              selected={pickupDateTime}
+              onSelect={setPickupDateTime}
+            />
+            <Label htmlFor="return-switch">Return Date</Label>
             <Switch
-              // id="return"
+              id="return-switch"
               checked={isReturnEnabled}
               onCheckedChange={setIsReturnEnabled}
             />
-            <Label htmlFor="return">Enable Return Date</Label>
           </div>
           {isReturnEnabled && (
-            <div>
+            <div className="flex items-center space-x-2">
               <Label htmlFor="return-date">Return Date</Label>
-              <DateTimePicker
+              <DatePicker
                 id="return-date"
+                selected={returnDateTime}
+                onSelect={setReturnDateTime}
+              />
+              <Label htmlFor="return-time">Return Time</Label>
+              <TimePicker
+                id="return-time"
                 selected={returnDateTime}
                 onSelect={setReturnDateTime}
               />
             </div>
           )}
-          <div>
+          <div className="flex items-center space-x-2">
             <Label>Passengers</Label>
             <PassengerPicker
               onPassengersChange={(newAdults, newChildren) => {
@@ -87,9 +100,9 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
         <div className="space-y-2">
           <p><strong>From:</strong> {startDestination}</p>
           <p><strong>To:</strong> {endDestination}</p>
-          <p><strong>Pickup:</strong> {pickupDateTime?.toLocaleDateString()}</p>
+          <p><strong>Pickup:</strong> {pickupDateTime?.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' })}</p>
           {isReturnEnabled && (
-            <p><strong>Return:</strong> {returnDateTime?.toLocaleDateString()}</p>
+            <p><strong>Return:</strong> {returnDateTime?.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' })}</p>
           )}
           <p><strong>Passengers:</strong> {adults} adults, {children} children</p>
         </div>
