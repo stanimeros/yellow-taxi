@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import {  MagnifyingGlassIcon } from "@radix-ui/react-icons"
+
 
 interface Suggestion {
   place_id: string;
@@ -9,7 +9,7 @@ interface Suggestion {
 }
 
 interface PlaceAutocompleteProps {
-  onSelect: (value: string) => void;
+  onSelect: (value: Suggestion) => void;
   placeholder?: string;
 }
 
@@ -61,37 +61,41 @@ export function PlaceAutocomplete({ onSelect, placeholder = "Search places..." }
   const handleSuggestionClick = (suggestion: Suggestion) => {
     setInput(suggestion.description);
     setSelectedSuggestion(suggestion);
-    onSelect(suggestion.place_id);
+    onSelect(suggestion);
     setShowSuggestions(false);
   };
 
   return (
     <div ref={autocompleteRef} className="relative">
-      <Input
-        type="text"
-        value={input}
-        onChange={handleInputChange}
-        placeholder={placeholder}
-        className="w-full"
-      />
+      <div className="relative">
+        <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+        <Input
+          type="text"
+          value={input}
+          onChange={handleInputChange}
+          placeholder={placeholder}
+          className="w-full pl-9"
+        />
+      </div>
       {isLoading && (
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
         </div>
       )}
       {showSuggestions && suggestions.length > 0 && (
-        <ScrollArea className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60">
-          {suggestions.map((suggestion) => (
-            <Button
-              key={suggestion.place_id}
-              variant="ghost"
-              className="w-full text-left px-4 py-2 hover:bg-gray-100"
-              onClick={() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion.description}
-            </Button>
-          ))}
-        </ScrollArea>
+        <div className="absolute z-50 w-full top-full left-0 overflow-hidden">
+          <div className="w-full bg-white border border-gray-300 rounded-md shadow-lg my-1 max-h-60 overflow-y-auto">
+            {suggestions.map((suggestion) => (
+              <div
+                key={suggestion.place_id}
+                className="text-left p-2 hover:bg-gray-100 cursor-pointer overflow-hidden whitespace-nowrap text-ellipsis"
+                onClick={() => handleSuggestionClick(suggestion)}
+              >
+                {suggestion.description}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

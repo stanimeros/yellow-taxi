@@ -34,7 +34,7 @@ export function TimePicker({ id, selected, onSelect }: TimePickerProps) {
           id={id}
           variant={"outline"}
           className={cn(
-            "w-[120px] justify-start text-left font-normal",
+            "w-full justify-start text-left font-normal",
             !selected && "text-muted-foreground"
           )}
         >
