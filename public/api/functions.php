@@ -16,10 +16,11 @@
         }
 
         //Get place details from Google
+        require_once 'keys.php';
         $url = 'https://maps.googleapis.com/maps/api/place/details/json?'
         . 'placeid=' . urlencode($placeID)
         . '&fields=geometry'
-        . '&key=AIzaSyBtKu69Duk5h4_0jvwvYOFH5-Igl7rAQq4';
+        . '&key=' . $keys['google_maps_api_key'];
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
@@ -68,7 +69,7 @@
         . 'input=' . urlencode($input)
         . '&types=establishment'
         . '&components=country:gr'
-        . '&key=AIzaSyBtKu69Duk5h4_0jvwvYOFH5-Igl7rAQq4';
+        . '&key=' . $keys['google_maps_api_key'];
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
@@ -145,7 +146,7 @@
         . 'origin=place_id:' . $from_id
         . '&destination=place_id:' . $to_id
         . '&mode=driving'
-        . '&key=AIzaSyBtKu69Duk5h4_0jvwvYOFH5-Igl7rAQq4';
+        . '&key=' . $keys['google_maps_api_key'];
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
