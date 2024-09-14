@@ -3,6 +3,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+interface Suggestion {
+  place_id: string;
+  description: string;
+}
+
 interface PlaceAutocompleteProps {
   onSelect: (value: string) => void;
   placeholder?: string;
@@ -10,9 +15,10 @@ interface PlaceAutocompleteProps {
 
 export function PlaceAutocomplete({ onSelect, placeholder = "Search places..." }: PlaceAutocompleteProps) {
   const [input, setInput] = useState('');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedSuggestion, setSelectedSuggestion] = useState<Suggestion | null>(null);
   const autocompleteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,21 +35,19 @@ export function PlaceAutocomplete({ onSelect, placeholder = "Search places..." }
   }, []);
 
   useEffect(() => {
-    if (input.length > 0) {
+    if (input.length > 3 && selectedSuggestion?.description !== input) {
       setIsLoading(true);
-      const autocompleteService = new google.maps.places.AutocompleteService();
-      autocompleteService.getPlacePredictions(
-        { input },
-        (predictions, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-            setSuggestions(predictions.map((p) => p.description));
-          } else {
-            setSuggestions([]);
-          }
-          setIsLoading(false);
+      fetch(`http://localhost/taxi/api/get_suggestions.php?input=${encodeURIComponent(input)}`)
+        .then(response => response.json())
+        .then(data => {
+          setSuggestions(data);
           setShowSuggestions(true);
-        }
-      );
+        })
+        .catch(error => {
+          console.error('Error fetching suggestions:', error);
+        }).finally(() => {
+          setIsLoading(false);
+        });
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
@@ -54,9 +58,10 @@ export function PlaceAutocomplete({ onSelect, placeholder = "Search places..." }
     setInput(e.target.value);
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setInput(suggestion);
-    onSelect(suggestion);
+  const handleSuggestionClick = (suggestion: Suggestion) => {
+    setInput(suggestion.description);
+    setSelectedSuggestion(suggestion);
+    onSelect(suggestion.place_id);
     setShowSuggestions(false);
   };
 
@@ -76,14 +81,14 @@ export function PlaceAutocomplete({ onSelect, placeholder = "Search places..." }
       )}
       {showSuggestions && suggestions.length > 0 && (
         <ScrollArea className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60">
-          {suggestions.map((suggestion, index) => (
+          {suggestions.map((suggestion) => (
             <Button
-              key={index}
+              key={suggestion.place_id}
               variant="ghost"
               className="w-full text-left px-4 py-2 hover:bg-gray-100"
               onClick={() => handleSuggestionClick(suggestion)}
             >
-              {suggestion}
+              {suggestion.description}
             </Button>
           ))}
         </ScrollArea>

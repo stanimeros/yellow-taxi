@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { DatePicker } from '@/components/ui/date-picker';
-import {GoogleMap, useLoadScript } from '@react-google-maps/api';
+import { Map } from '@/components/ui/map';
 import { PassengerPicker } from '../ui/passenger-picker';
 import { PlaceAutocomplete } from '../ui/place-autocomplete';
 import { TimePicker } from '../ui/time-picker';
@@ -13,20 +13,15 @@ interface FirstStepProps {
 }
 
 export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
-  const [startDestination, setStartDestination] = useState('');
-  const [endDestination, setEndDestination] = useState('');
+  const [startPlaceId, setStartPlaceId] = useState('');
+  const [endPlaceId, setEndPlaceId] = useState('');
   const [pickupDateTime, setPickupDateTime] = useState<Date | undefined>(undefined);
   const [returnDateTime, setReturnDateTime] = useState<Date | undefined>(undefined);
   const [isReturnEnabled, setIsReturnEnabled] = useState(false);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
-
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY_HERE',
-    libraries: ['places'],
-  });
-
-  if (!isLoaded) return <div>Loading...</div>;
+  const [duration, setDuration] = useState('');
+  const [distance, setDistance] = useState('');
 
   return (
     <div className="flex">
@@ -36,14 +31,14 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
           <div>
             <Label htmlFor="start">Start Destination</Label>
             <PlaceAutocomplete
-              onSelect={(value) => setStartDestination(value)}
+              onSelect={(value) => setStartPlaceId(value)}
               placeholder="Enter start location"
             />
           </div>
           <div>
             <Label htmlFor="end">End Destination</Label>
             <PlaceAutocomplete
-              onSelect={(value) => setEndDestination(value)}
+              onSelect={(value) => setEndPlaceId(value)}
               placeholder="Enter end location"
             />
           </div>
@@ -98,22 +93,23 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
       <div className="w-1/3 p-4">
         <h3 className="text-xl font-bold mb-4">Trip Summary</h3>
         <div className="space-y-2">
-          <p><strong>From:</strong> {startDestination}</p>
-          <p><strong>To:</strong> {endDestination}</p>
+          <p><strong>From:</strong> {startPlaceId}</p>
+          <p><strong>To:</strong> {endPlaceId}</p>
           <p><strong>Pickup:</strong> {pickupDateTime?.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' })}</p>
           {isReturnEnabled && (
             <p><strong>Return:</strong> {returnDateTime?.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' })}</p>
           )}
           <p><strong>Passengers:</strong> {adults} adults, {children} children</p>
+          <p><strong>Duration:</strong> {duration}</p>
+          <p><strong>Distance:</strong> {distance}</p>
         </div>
         <div className="mt-4 h-64">
-          <GoogleMap
-            zoom={10}
-            center={{ lat: 0, lng: 0 }}
-            mapContainerClassName="w-full h-full"
-          >
-            {/* Add markers for start and end destinations when coordinates are available */}
-          </GoogleMap>
+          <Map
+            fromDestinationID={startPlaceId}
+            toDestinationID={endPlaceId}
+            setDuration={setDuration}
+            setDistance={setDistance}
+          />
         </div>
       </div>
     </div>
