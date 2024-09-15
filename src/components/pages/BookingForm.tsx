@@ -3,9 +3,10 @@ import { FirstStep } from '../form/FirstStep';
 import { Suggestion } from '../objects/Suggestion';
 import { GlobalState } from '../objects/GlobalState';
 import { SecondStep } from '../form/SecondStep';
+import { ThirdStep } from '../form/ThirdStep';
 
 export const BookingForm: React.FC = () => {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(3);
 
   const [startDestination, setStartDestination] = useState<Suggestion | null>(null);
   const [endDestination, setEndDestination] = useState<Suggestion | null>(null);
@@ -19,6 +20,17 @@ export const BookingForm: React.FC = () => {
   const [vehicleCategory, setVehicleCategory] = useState('');
   const [language, setLanguage] = useState('en');
   const [theme, setTheme] = useState('light');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [areaCode, setAreaCode] = useState('');
+  const [phone, setPhone] = useState('');
+  const [ferryName, setFerryName] = useState('');
+  const [airplaneName, setAirplaneName] = useState('');
+  const [infantChildSeats, setInfantChildSeats] = useState(0);
+  const [babySeats, setBabySeats] = useState(0);
+  const [boosterSeats, setBoosterSeats] = useState(0);
+  const [bulkyLuggage, setBulkyLuggage] = useState(false);
+  const [notes, setNotes] = useState('');
   const api = 'http://localhost/taxi/api'
 
   const globalState: GlobalState = {
@@ -34,6 +46,17 @@ export const BookingForm: React.FC = () => {
     distance, setDistance,
     luggage, setLuggage,
     vehicleCategory, setVehicleCategory,
+    email, setEmail,
+    name, setName,
+    areaCode, setAreaCode,
+    phone, setPhone,
+    ferryName, setFerryName,
+    airplaneName, setAirplaneName,
+    infantChildSeats, setInfantChildSeats,
+    babySeats, setBabySeats,
+    boosterSeats, setBoosterSeats,
+    bulkyLuggage, setBulkyLuggage,
+    notes, setNotes
   };
 
   return (
@@ -55,13 +78,9 @@ export const BookingForm: React.FC = () => {
       </div>
       <div>
         {step === 1 && <FirstStep setStep={setStep} globalState={globalState} />}
-        {step === 2 && (
-          <SecondStep setStep={setStep} globalState={globalState}/>
-        )}
-        {step === 3 && (
-          <></>
-          // <ThirdStep />
-        )}
+        {step === 2 && <SecondStep setStep={setStep} globalState={globalState}/>}
+        {step === 3 && <ThirdStep setStep={setStep} globalState={globalState} />}
+        {/* {step === 4 && <SecondStep setStep={setStep} globalState={globalState}/>} */}
       </div>
     </div>
   );
