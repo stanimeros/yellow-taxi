@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { PlusIcon, MinusIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,31 +7,24 @@ import {
 } from "@/components/ui/popover";
 
 interface PassengerPickerProps {
-  onPassengersChange: (adults: number, children: number) => void;
+  adults: number;
+  children: number;
+  setAdults: (value: number) => void;
+  setChildren: (value: number) => void;
 }
 
-export function PassengerPicker({ onPassengersChange }: PassengerPickerProps) {
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
-
+export function PassengerPicker({ adults, children, setAdults, setChildren }: PassengerPickerProps) {
   const MAX_PASSENGERS = 12;
 
   const updatePassengers = (type: 'adults' | 'children', operation: 'add' | 'subtract') => {
     const setValue = type === 'adults' ? setAdults : setChildren;
     const currentValue = type === 'adults' ? adults : children;
     
-    let newValue = currentValue;
     if (operation === 'add' && adults + children < MAX_PASSENGERS) {
-      newValue = currentValue + 1;
+      setValue(currentValue + 1);
     } else if (operation === 'subtract' && currentValue > 0) {
-      newValue = currentValue - 1;
+      setValue(currentValue - 1);
     }
-
-    setValue(newValue);
-
-    const newAdults = type === 'adults' ? newValue : adults;
-    const newChildren = type === 'children' ? newValue : children;
-    onPassengersChange(newAdults, newChildren);
   };
 
   return (

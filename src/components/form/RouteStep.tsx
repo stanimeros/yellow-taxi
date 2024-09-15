@@ -11,18 +11,19 @@ import { Card } from '../ui/card';
 import { MinusIcon, PlusIcon } from "@radix-ui/react-icons"
 import { GlobalState } from '../objects/GlobalState';
 
-interface FirstStepProps {
+interface RouteStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
   globalState: GlobalState;
 }
 
-export const FirstStep: React.FC<FirstStepProps> = ({ setStep, globalState }) => {
+export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) => {
   const { 
     api, startDestination, setStartDestination,
     endDestination, setEndDestination,
     pickupDateTime, setPickupDateTime,
     returnDateTime, setReturnDateTime,
-    setAdults, setChildren,
+    adults, setAdults, 
+    children, setChildren,
     setDuration, setDistance,
     luggage, setLuggage } = globalState;
 
@@ -109,10 +110,10 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep, globalState }) =>
             <div className="flex flex-col space-y-2 w-full">
               <Label className="text-sm font-medium">Passengers</Label>
               <PassengerPicker
-                onPassengersChange={(newAdults, newChildren) => {
-                  setAdults(newAdults);
-                  setChildren(newChildren);
-                }}
+                adults={adults}
+                setAdults={setAdults}
+                children={children}
+                setChildren={setChildren}
               />
             </div>
             <div className="flex flex-col space-y-2 w-full">

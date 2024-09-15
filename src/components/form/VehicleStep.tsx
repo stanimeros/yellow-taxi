@@ -6,12 +6,12 @@ import { TripSummary } from './TripSummary';
 import { VehicleCategory } from '../objects/VehicleCategory';
 import { Skeleton } from '../ui/skeleton';
 
-interface SecondStepProps {
+interface VehicleStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
   globalState: GlobalState;
 }
 
-export const SecondStep: React.FC<SecondStepProps> = ({ setStep, globalState }) => {
+export const VehicleStep: React.FC<VehicleStepProps> = ({ setStep, globalState }) => {
   const { 
     api, startDestination, endDestination,
     returnDateTime, adults, children,
@@ -63,8 +63,13 @@ export const SecondStep: React.FC<SecondStepProps> = ({ setStep, globalState }) 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <Card className="flex flex-col justify-between space-y-4 lg:col-span-2 shadow-lg overflow-hidden p-6">
-        <div>
-          <h2 className="text-2xl font-bold mb-4 text-primary">Choose Your Vehicle</h2>
+        <div className='flex flex-col space-y-4'>
+          <div className="flex justify-between">
+            <h2 className="text-2xl font-bold text-primary">Choose Your Vehicle</h2>
+            <Button variant="outline" onClick={() => setStep(1)}>
+              Go Back
+            </Button>
+          </div>
           <div className="space-y-4">
             {vehicleCategories.length === 0 ? (
               // Skeleton loading state

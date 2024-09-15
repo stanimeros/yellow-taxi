@@ -39,8 +39,8 @@ export type GlobalState = {
   setFerryName: React.Dispatch<React.SetStateAction<string>>;
   airplaneName: string;
   setAirplaneName: React.Dispatch<React.SetStateAction<string>>;
-  infantChildSeats: number;
-  setInfantChildSeats: React.Dispatch<React.SetStateAction<number>>;
+  infantSeats: number;
+  setInfantSeats: React.Dispatch<React.SetStateAction<number>>;
   babySeats: number;
   setBabySeats: React.Dispatch<React.SetStateAction<number>>;
   boosterSeats: number;

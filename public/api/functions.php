@@ -47,7 +47,7 @@
         return ['longitude' => $longitude, 'latitude' => $latitude];
     }
 
-    function getPredictions($input, $conn){
+    function getSuggestions($input, $conn){
         //Get predictions from local database
         $sql = "SELECT place_id, description FROM google_places WHERE description LIKE ? LIMIT 5;";
         $stmt = $conn->prepare($sql);
@@ -60,11 +60,12 @@
         $predictions = $result->fetch_all(MYSQLI_ASSOC);
         $num_predictions = count($predictions);
 
-        if ($num_predictions == 5) {
+        if ($num_predictions >= 5) {
             return $predictions;
         }
 
         //Get predictions from Google
+        require_once 'keys.php';
         $url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?'
         . 'input=' . urlencode($input)
         . '&types=establishment'
@@ -74,15 +75,13 @@
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
 
-        print($response);
-
         if(curl_errno($ch)){
             $error_msg = curl_error($ch);
             curl_close($ch);
-            return "Error in getPredictions: $error_msg";
+            return "Error in getSuggestions: $error_msg";
         }
         curl_close($ch);
-        
+
         //Update local database
         $array_data = json_decode($response, true);
         $predictions = $array_data['predictions'];
@@ -142,6 +141,7 @@
     }
 
     function getDirections($from_id, $to_id){
+        require_once 'keys.php';
         $url = 'https://maps.googleapis.com/maps/api/directions/json?'
         . 'origin=place_id:' . $from_id
         . '&destination=place_id:' . $to_id

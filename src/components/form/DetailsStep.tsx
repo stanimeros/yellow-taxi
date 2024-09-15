@@ -13,26 +13,29 @@ import { ChildSeatsPicker } from '../ui/child-seats-picker';
 import { Switch } from '../ui/switch';
 import { PersonIcon, EnvelopeClosedIcon, GlobeIcon, MobileIcon, Pencil2Icon } from '@radix-ui/react-icons';
 
-interface ThirdStepProps {
+interface DetailsStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
   globalState: GlobalState;
 }
 
-export const ThirdStep: React.FC<ThirdStepProps> = ({ setStep, globalState }) => {
+export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }) => {
   const { 
     email, setEmail,
     name, setName,
     phone, setPhone,
     areaCode, setAreaCode,
-    setFerryName, setAirplaneName,
-    setInfantChildSeats, setBabySeats, setBoosterSeats,
+    ferryName, setFerryName, 
+    airplaneName, setAirplaneName,
+    infantSeats, setInfantSeats, 
+    babySeats, setBabySeats, 
+    boosterSeats, setBoosterSeats,
     bulkyLuggage, setBulkyLuggage,
     notes, setNotes
   } = globalState;
 
-  const [showFerryInput, setShowFerryInput] = useState(false);
-  const [showAirplaneInput, setShowAirplaneInput] = useState(false);
-  const [showChildSeats, setShowChildSeats] = useState(false);
+  const [showFerryInput, setShowFerryInput] = useState(ferryName.length > 0);
+  const [showAirplaneInput, setShowAirplaneInput] = useState(airplaneName.length > 0);
+  const [showChildSeats, setShowChildSeats] = useState(infantSeats > 0 || babySeats > 0 || boosterSeats > 0);
 
   const handleTransportChange = (value: string) => {
     setShowFerryInput(value === 'ferry');
@@ -47,7 +50,12 @@ export const ThirdStep: React.FC<ThirdStepProps> = ({ setStep, globalState }) =>
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <Card className="flex flex-col justify-between space-y-4 lg:col-span-2 shadow-lg overflow-hidden p-6">
         <div className='flex flex-col space-y-6'>
-          <h2 className="text-2xl font-bold text-primary">Booking Details</h2>
+          <div className="flex justify-between">
+            <h2 className="text-2xl font-bold text-primary">Booking Details</h2>
+            <Button variant="outline" onClick={() => setStep(2)}>
+              Go Back
+            </Button>
+          </div>
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -144,6 +152,7 @@ export const ThirdStep: React.FC<ThirdStepProps> = ({ setStep, globalState }) =>
               {(showFerryInput || showAirplaneInput) && (
                 <Input
                   id='transport-name'
+                  value={showFerryInput? ferryName : airplaneName}
                   placeholder={showFerryInput ? "Enter ferry name" : "Enter airplane name"}
                   onChange={(e) => showFerryInput ? setFerryName(e.target.value) : setAirplaneName(e.target.value)}
                 />
@@ -157,7 +166,7 @@ export const ThirdStep: React.FC<ThirdStepProps> = ({ setStep, globalState }) =>
                   onCheckedChange={(checked) => {
                     setShowChildSeats(checked);
                     if (!checked) {
-                      setInfantChildSeats(0);
+                      setInfantSeats(0);
                       setBabySeats(0);
                       setBoosterSeats(0);
                     }
@@ -169,11 +178,12 @@ export const ThirdStep: React.FC<ThirdStepProps> = ({ setStep, globalState }) =>
               </div>
               {showChildSeats && (
                 <ChildSeatsPicker
-                  onChildSeatsChange={(newInfantChildSeats, newBabySeats, newBoosterSeats) => {
-                    setInfantChildSeats(newInfantChildSeats);
-                    setBabySeats(newBabySeats);
-                    setBoosterSeats(newBoosterSeats)
-                  }}
+                  infantSeats={infantSeats}
+                  babySeats={babySeats}
+                  boosterSeats={boosterSeats}
+                  setInfantSeats={setInfantSeats}
+                  setBabySeats={setBabySeats}
+                  setBoosterSeats={setBoosterSeats}
                 />
               )}
             </div>

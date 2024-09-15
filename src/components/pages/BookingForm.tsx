@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { FirstStep } from '../form/FirstStep';
+import { RouteStep } from '../form/RouteStep';
 import { Suggestion } from '../objects/Suggestion';
 import { GlobalState } from '../objects/GlobalState';
-import { SecondStep } from '../form/SecondStep';
-import { ThirdStep } from '../form/ThirdStep';
+import { VehicleStep } from '../form/VehicleStep';
+import { DetailsStep } from '../form/DetailsStep';
+import { PaymentStep } from '../form/PaymentStep';
 
 export const BookingForm: React.FC = () => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
 
   const [startDestination, setStartDestination] = useState<Suggestion | null>(null);
   const [endDestination, setEndDestination] = useState<Suggestion | null>(null);
@@ -26,7 +27,7 @@ export const BookingForm: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [ferryName, setFerryName] = useState('');
   const [airplaneName, setAirplaneName] = useState('');
-  const [infantChildSeats, setInfantChildSeats] = useState(0);
+  const [infantSeats, setInfantSeats] = useState(0);
   const [babySeats, setBabySeats] = useState(0);
   const [boosterSeats, setBoosterSeats] = useState(0);
   const [bulkyLuggage, setBulkyLuggage] = useState(false);
@@ -52,7 +53,7 @@ export const BookingForm: React.FC = () => {
     phone, setPhone,
     ferryName, setFerryName,
     airplaneName, setAirplaneName,
-    infantChildSeats, setInfantChildSeats,
+    infantSeats, setInfantSeats, 
     babySeats, setBabySeats,
     boosterSeats, setBoosterSeats,
     bulkyLuggage, setBulkyLuggage,
@@ -77,10 +78,10 @@ export const BookingForm: React.FC = () => {
         </div>
       </div>
       <div>
-        {step === 1 && <FirstStep setStep={setStep} globalState={globalState} />}
-        {step === 2 && <SecondStep setStep={setStep} globalState={globalState}/>}
-        {step === 3 && <ThirdStep setStep={setStep} globalState={globalState} />}
-        {/* {step === 4 && <SecondStep setStep={setStep} globalState={globalState}/>} */}
+        {step === 1 && <RouteStep setStep={setStep} globalState={globalState} />}
+        {step === 2 && <VehicleStep setStep={setStep} globalState={globalState}/>}
+        {step === 3 && <DetailsStep setStep={setStep} globalState={globalState} />}
+        {step === 4 && <PaymentStep setStep={setStep} globalState={globalState}/>}
       </div>
     </div>
   );

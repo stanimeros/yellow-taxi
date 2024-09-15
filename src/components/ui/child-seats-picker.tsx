@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { PlusIcon, MinusIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,14 +7,14 @@ import {
 } from "@/components/ui/popover";
 
 interface ChildSeatsPickerProps {
-  onChildSeatsChange: (infantSeats: number, babySeats: number, boosterSeats: number) => void;
+  infantSeats: number;
+  babySeats: number;
+  boosterSeats: number;
+  setInfantSeats: (value: number) => void;
+  setBabySeats: (value: number) => void;
+  setBoosterSeats: (value: number) => void;
 }
-
-export function ChildSeatsPicker({ onChildSeatsChange }: ChildSeatsPickerProps) {
-  const [infantSeats, setInfantSeats] = useState(0);
-  const [babySeats, setBabySeats] = useState(0);
-  const [boosterSeats, setBoosterSeats] = useState(0);
-
+export function ChildSeatsPicker({ infantSeats, babySeats, boosterSeats, setInfantSeats, setBabySeats, setBoosterSeats }: ChildSeatsPickerProps) {
   const MAX_SEATS = 10;
 
   const updateSeats = (type: 'infant' | 'baby' | 'booster', operation: 'add' | 'subtract') => {
@@ -34,11 +33,6 @@ export function ChildSeatsPicker({ onChildSeatsChange }: ChildSeatsPickerProps) 
     }
 
     setValue(newValue);
-    onChildSeatsChange(
-      type === 'infant' ? newValue : infantSeats,
-      type === 'baby' ? newValue : babySeats,
-      type === 'booster' ? newValue : boosterSeats
-    );
   };
 
   const renderSeatControl = (type: 'infant' | 'baby' | 'booster', label: string) => {

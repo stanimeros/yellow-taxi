@@ -10,10 +10,14 @@ interface TripSummaryProps {
 export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
   const {
     startDestination, endDestination,
-    pickupDateTime, returnDateTime,
-    adults, children,
-    duration, distance,
-    setDuration,setDistance
+    pickupDateTime, returnDateTime, 
+    adults, children, duration, 
+    distance, luggage, vehicleCategory, 
+    email, name, areaCode, phone, 
+    ferryName, airplaneName, 
+    infantSeats, babySeats, 
+    boosterSeats, bulkyLuggage,  notes,
+    setDuration, setDistance
   } = globalState;
 
   return (
@@ -21,15 +25,29 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
       <div className='p-6'>
         <h3 className="text-2xl font-bold mb-4 text-primary">Trip Summary</h3>
         <div className="space-y-3">
-          <p><strong>From:</strong> {startDestination?.description || 'Select starting point'}</p>
-          <p><strong>To:</strong> {endDestination?.description || 'Select destination'}</p>
-          <p><strong>Pickup:</strong> {pickupDateTime ? pickupDateTime.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' }) : 'Select pickup date and time'}</p>
-          {returnDateTime && (
-            <p><strong>Return:</strong> {returnDateTime ? returnDateTime.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' }) : 'Select return date and time'}</p>
+          {startDestination && <p><strong>From:</strong> {startDestination.description}</p>}
+          {endDestination && <p><strong>To:</strong> {endDestination.description}</p>}
+          {pickupDateTime && <p><strong>Pickup:</strong> {pickupDateTime.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' })}</p>}
+          {returnDateTime && <p><strong>Return:</strong> {returnDateTime.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' })}</p>}
+          {(adults > 0 || children > 0) && <p><strong>Passengers:</strong> {adults} adults{children > 0 ? `, ${children} children` : ''}</p>}
+          {duration && <p><strong>Duration:</strong> {duration}</p>}
+          {distance && <p><strong>Distance:</strong> {distance}</p>}
+          {luggage > 0 && <p><strong>Luggage:</strong> {luggage} pieces</p>}
+          {vehicleCategory && <p><strong>Vehicle:</strong> {vehicleCategory}</p>}
+          {name && <p><strong>Name:</strong> {name}</p>}
+          {email && <p><strong>Email:</strong> {email}</p>}
+          {areaCode && phone && <p><strong>Phone:</strong> +{areaCode} {phone}</p>}
+          {ferryName && <p><strong>Ferry:</strong> {ferryName}</p>}
+          {airplaneName && <p><strong>Flight:</strong> {airplaneName}</p>}
+          {(infantSeats > 0 || babySeats > 0 || boosterSeats > 0) && (
+            <p><strong>Child Seats: </strong> 
+              {infantSeats > 0 && `${infantSeats} infant`}
+              {babySeats > 0 && `${infantSeats > 0 ? ', ' : ''}${babySeats} baby`}
+              {boosterSeats > 0 && `${infantSeats > 0 || babySeats > 0 ? ', ' : ''}${boosterSeats} booster`}
+            </p>
           )}
-          <p><strong>Passengers:</strong> {adults > 0 || children > 0 ? `${adults} adults${children > 0 ? `, ${children} children` : ''}` : 'Select number of passengers'}</p>
-          <p><strong>Duration:</strong> {startDestination && endDestination ? (duration || 'Calculating...') : 'Select destination points'}</p>
-          <p><strong>Distance:</strong> {startDestination && endDestination ? (distance || 'Calculating...') : 'Select destination points'}</p>
+          {bulkyLuggage && <p><strong>Bulky Luggage:</strong> Yes</p>}
+          {notes && <p><strong>Notes:</strong> {notes}</p>}
         </div>
       </div>
       <div className="h-[400px]">
