@@ -5,7 +5,7 @@ import { GlobalState } from '../objects/GlobalState';
 import { SecondStep } from '../form/SecondStep';
 
 export const BookingForm: React.FC = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
 
   const [startDestination, setStartDestination] = useState<Suggestion | null>(null);
   const [endDestination, setEndDestination] = useState<Suggestion | null>(null);
@@ -48,9 +48,9 @@ export const BookingForm: React.FC = () => {
         <div className="flex justify-between mt-2 text-sm text-gray-500">
           <span className={step >= 0 ? "text-blue-600 font-semibold" : ""}>Welcome</span>
           <span className={step >= 1 ? "text-blue-600 font-semibold" : ""}>Route</span>
-          <span className={step >= 2 ? "text-blue-600 font-semibold" : ""}>Details</span>
+          <span className={step >= 2 ? "text-blue-600 font-semibold" : ""}>Vehicle</span>
+          <span className={step >= 3 ? "text-blue-600 font-semibold" : ""}>Details</span>
           <span className={step >= 3 ? "text-blue-600 font-semibold" : ""}>Payment</span>
-          <span className={step >= 3 ? "text-blue-600 font-semibold" : ""}>Confirmation</span>
         </div>
       </div>
       <div>
