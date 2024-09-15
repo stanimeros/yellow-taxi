@@ -1,8 +1,40 @@
 import React, { useState } from 'react';
 import { FirstStep } from '../form/FirstStep';
+import { Suggestion } from '../objects/Suggestion';
+import { GlobalState } from '../objects/GlobalState';
+import { SecondStep } from '../form/SecondStep';
 
 export const BookingForm: React.FC = () => {
   const [step, setStep] = useState(1);
+
+  const [startDestination, setStartDestination] = useState<Suggestion | null>(null);
+  const [endDestination, setEndDestination] = useState<Suggestion | null>(null);
+  const [pickupDateTime, setPickupDateTime] = useState<Date | undefined>(undefined);
+  const [returnDateTime, setReturnDateTime] = useState<Date | undefined>(undefined);
+  const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [duration, setDuration] = useState('');
+  const [distance, setDistance] = useState('');
+  const [luggage, setLuggage] = useState(0);
+  const [vehicleCategory, setVehicleCategory] = useState('');
+  const [language, setLanguage] = useState('en');
+  const [theme, setTheme] = useState('light');
+  const api = 'http://localhost/taxi/api'
+
+  const globalState: GlobalState = {
+    api, language, setLanguage,
+    theme, setTheme,
+    startDestination, setStartDestination,
+    endDestination, setEndDestination,
+    pickupDateTime, setPickupDateTime,
+    returnDateTime, setReturnDateTime,
+    adults, setAdults,
+    children, setChildren,
+    duration, setDuration,
+    distance, setDistance,
+    luggage, setLuggage,
+    vehicleCategory, setVehicleCategory,
+  };
 
   return (
     <div className="m-16">
@@ -22,10 +54,9 @@ export const BookingForm: React.FC = () => {
         </div>
       </div>
       <div>
-        {step === 1 && <FirstStep setStep={setStep} />}
+        {step === 1 && <FirstStep setStep={setStep} globalState={globalState} />}
         {step === 2 && (
-          <></>
-          // <SecondStep setStep={setStep} />
+          <SecondStep setStep={setStep} globalState={globalState}/>
         )}
         {step === 3 && (
           <></>

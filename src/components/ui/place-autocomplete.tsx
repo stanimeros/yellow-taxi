@@ -1,19 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Input } from "@/components/ui/input";
 import {  MagnifyingGlassIcon } from "@radix-ui/react-icons"
-
-
-interface Suggestion {
-  place_id: string;
-  description: string;
-}
+import { Suggestion } from '../objects/Suggestion';
 
 interface PlaceAutocompleteProps {
   onSelect: (value: Suggestion) => void;
   placeholder?: string;
+  api: string;
 }
 
-export function PlaceAutocomplete({ onSelect, placeholder = "Search places..." }: PlaceAutocompleteProps) {
+export function PlaceAutocomplete({ onSelect, placeholder = "Search places...", api }: PlaceAutocompleteProps) {
   const [input, setInput] = useState('');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +33,7 @@ export function PlaceAutocomplete({ onSelect, placeholder = "Search places..." }
   useEffect(() => {
     if (input.length > 3 && selectedSuggestion?.description !== input) {
       setIsLoading(true);
-      fetch(`http://localhost/taxi/api/get_suggestions.php?input=${encodeURIComponent(input)}`)
+      fetch(`${api}/get_suggestions.php?input=${encodeURIComponent(input)}`)
         .then(response => response.json())
         .then(data => {
           setSuggestions(data);

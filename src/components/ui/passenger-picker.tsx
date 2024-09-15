@@ -42,7 +42,7 @@ export function PassengerPicker({ onPassengersChange }: PassengerPickerProps) {
           {adults} Adult{adults !== 1 ? 's' : ''}, {children} Child{children !== 1 ? 'ren' : ''}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
+      <PopoverContent>
         <div className="grid gap-4">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Adults</span>
@@ -52,7 +52,7 @@ export function PassengerPicker({ onPassengersChange }: PassengerPickerProps) {
                 size="icon"
                 onClick={() => updatePassengers('adults', 'subtract')}
                 disabled={adults <= 1}
-                className="disabled:opacity-25"
+                className="disabled:opacity-40"
               >
                 <MinusIcon className="h-4 w-4" />
               </Button>
@@ -62,7 +62,7 @@ export function PassengerPicker({ onPassengersChange }: PassengerPickerProps) {
                 size="icon"
                 onClick={() => updatePassengers('adults', 'add')}
                 disabled={adults + children >= MAX_PASSENGERS}
-                className="disabled:opacity-25"
+                className="disabled:opacity-40"
               >
                 <PlusIcon className="h-4 w-4" />
               </Button>
@@ -76,7 +76,7 @@ export function PassengerPicker({ onPassengersChange }: PassengerPickerProps) {
                 size="icon"
                 onClick={() => updatePassengers('children', 'subtract')}
                 disabled={children <= 0}
-                className="disabled:opacity-25"
+                className="disabled:opacity-40"
               >
                 <MinusIcon className="h-4 w-4" />
               </Button>
@@ -86,7 +86,7 @@ export function PassengerPicker({ onPassengersChange }: PassengerPickerProps) {
                 size="icon"
                 onClick={() => updatePassengers('children', 'add')}
                 disabled={adults + children >= MAX_PASSENGERS}
-                className="disabled:opacity-25"
+                className="disabled:opacity-40"
               >
                 <PlusIcon className="h-4 w-4" />
               </Button>

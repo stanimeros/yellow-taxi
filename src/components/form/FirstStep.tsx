@@ -9,28 +9,24 @@ import { PlaceAutocomplete } from '../ui/place-autocomplete';
 import { TimePicker } from '../ui/time-picker';
 import { Card } from '../ui/card';
 import { MinusIcon, PlusIcon } from "@radix-ui/react-icons"
-
+import { GlobalState } from '../objects/GlobalState';
 
 interface FirstStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
+  globalState: GlobalState;
 }
 
-interface Suggestion {
-  place_id: string;
-  description: string;
-}
+export const FirstStep: React.FC<FirstStepProps> = ({ setStep, globalState }) => {
+  const { 
+    api, startDestination, setStartDestination,
+    endDestination, setEndDestination,
+    pickupDateTime, setPickupDateTime,
+    returnDateTime, setReturnDateTime,
+    setAdults, setChildren,
+    setDuration, setDistance,
+    luggage, setLuggage } = globalState;
 
-export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
-  const [startDestination, setStartDestination] = useState<Suggestion | null>(null);
-  const [endDestination, setEndDestination] = useState<Suggestion | null>(null);
-  const [pickupDateTime, setPickupDateTime] = useState<Date | undefined>(undefined);
-  const [returnDateTime, setReturnDateTime] = useState<Date | undefined>(undefined);
   const [isReturnEnabled, setIsReturnEnabled] = useState(false);
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
-  const [duration, setDuration] = useState('');
-  const [distance, setDistance] = useState('');
-  const [luggage, setLuggage] = useState(0);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -43,6 +39,7 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
               <PlaceAutocomplete
                 onSelect={(value) => setStartDestination(value)}
                 placeholder="Type a place"
+                api={api}
               />
             </div>
             <div className="flex flex-col space-y-2 w-full">
@@ -50,6 +47,7 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
               <PlaceAutocomplete
                 onSelect={(value) => setEndDestination(value)}
                 placeholder="Type a place"
+                api={api}
               />
             </div>
           </div>
@@ -75,7 +73,12 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
             <Switch
               id="return-switch"
               checked={isReturnEnabled}
-              onCheckedChange={setIsReturnEnabled}
+              onCheckedChange={(checked) => {
+                setIsReturnEnabled(checked);
+                if (!checked) {
+                  setReturnDateTime(undefined);
+                }
+              }}
             />
             <Label htmlFor="return-switch" className="text-sm font-medium">
               Add Return Trip
@@ -120,6 +123,8 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
                   size="icon"
                   onClick={() => setLuggage(prev => Math.max(0, prev - 1))}
                   aria-label="Decrease luggage"
+                  disabled={luggage <= 1}
+                  className="disabled:opacity-40"
                 >
                   <MinusIcon className="h-4 w-4" />
                 </Button>
@@ -129,6 +134,8 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
                   size="icon"
                   onClick={() => setLuggage(prev => prev + 1)}
                   aria-label="Increase luggage"
+                  disabled={luggage >= 12}
+                  className="disabled:opacity-40"
                 >
                   <PlusIcon className="h-4 w-4" />
                 </Button>
@@ -139,28 +146,12 @@ export const FirstStep: React.FC<FirstStepProps> = ({ setStep }) => {
         </div>
       </Card>
       <Card className="shadow-lg overflow-hidden">
-        <div className='p-6'>
-          <h3 className="text-2xl font-bold mb-4 text-primary">Trip Summary</h3>
-          <div className="space-y-3">
-            <p><strong>From:</strong> {startDestination?.description || 'Select starting point'}</p>
-            <p><strong>To:</strong> {endDestination?.description || 'Select destination'}</p>
-            <p><strong>Pickup:</strong> {pickupDateTime ? pickupDateTime.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' }) : 'Select pickup date and time'}</p>
-            {isReturnEnabled && (
-              <p><strong>Return:</strong> {returnDateTime ? returnDateTime.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' }) : 'Select return date and time'}</p>
-            )}
-            <p><strong>Passengers:</strong> {adults > 0 || children > 0 ? `${adults} adults${children > 0 ? `, ${children} children` : ''}` : 'Select number of passengers'}</p>
-            <p><strong>Duration:</strong> {startDestination && endDestination ? (duration || 'Calculating...') : 'Select destination points'}</p>
-            <p><strong>Distance:</strong> {startDestination && endDestination ? (distance || 'Calculating...') : 'Select destination points'}</p>
-          </div>
-        </div>
-        <div className="h-[400px] lg:h-[500px]">
-          <Map
-            fromDestinationID={startDestination?.place_id || null}
-            toDestinationID={endDestination?.place_id || null}
-            setDuration={setDuration}
-            setDistance={setDistance}
-          />
-        </div>
+        <Map
+          fromDestinationID={startDestination?.place_id || null}
+          toDestinationID={endDestination?.place_id || null}
+          setDuration={setDuration}
+          setDistance={setDistance}
+        />
       </Card>
     </div>
   );

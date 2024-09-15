@@ -63,7 +63,7 @@ export function TimePicker({ id, selected, onSelect }: TimePickerProps) {
                 <ChevronDownIcon className="h-4 w-4" />
               </Button>
             </div>
-            <div className="flex items-center space-x-2 text-4xl">
+            <div className="flex items-center space-x-2 text-4xl px-4">
               <div>
                 {selected ? format(selected, "HH") : "--"}
               </div>
