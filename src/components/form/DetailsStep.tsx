@@ -7,11 +7,11 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { ChildSeatsPicker } from '../ui/child-seats-picker';
 import { Switch } from '../ui/switch';
 import { PersonIcon, EnvelopeClosedIcon, GlobeIcon, MobileIcon, Pencil2Icon } from '@radix-ui/react-icons';
+import { AreaCodePicker } from '../ui/area-code-picker';
 
 interface DetailsStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -88,29 +88,12 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
               <div className="space-y-2">
                 <Label htmlFor="areaCode" className="flex items-center">
                   <GlobeIcon className="w-4 h-4 mr-2" />
-                  Phone Country Code
+                  Phone Area Code
                 </Label>
-                <Select
-                  value={areaCode}
-                  onValueChange={(value) => setAreaCode(value)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select country code" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="US">🇺🇸 United States (+1)</SelectItem>
-                    <SelectItem value="GB">🇬🇧 United Kingdom (+44)</SelectItem>
-                    <SelectItem value="DE">🇩🇪 Germany (+49)</SelectItem>
-                    <SelectItem value="FR">🇫🇷 France (+33)</SelectItem>
-                    <SelectItem value="IT">🇮🇹 Italy (+39)</SelectItem>
-                    <SelectItem value="ES">🇪🇸 Spain (+34)</SelectItem>
-                    <SelectItem value="CA">🇨🇦 Canada (+1)</SelectItem>
-                    <SelectItem value="AU">🇦🇺 Australia (+61)</SelectItem>
-                    <SelectItem value="JP">🇯🇵 Japan (+81)</SelectItem>
-                    <SelectItem value="CN">🇨🇳 China (+86)</SelectItem>
-                    {/* Add more countries as needed */}
-                  </SelectContent>
-                </Select>
+                <AreaCodePicker
+                  areaCode={areaCode}
+                  setAreaCode={setAreaCode}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone" className="flex items-center">

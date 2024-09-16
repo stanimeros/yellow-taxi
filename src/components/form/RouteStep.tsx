@@ -8,8 +8,8 @@ import { PassengerPicker } from '../ui/passenger-picker';
 import { PlaceAutocomplete } from '../ui/place-autocomplete';
 import { TimePicker } from '../ui/time-picker';
 import { Card } from '../ui/card';
-import { MinusIcon, PlusIcon } from "@radix-ui/react-icons"
 import { GlobalState } from '../objects/GlobalState';
+import { LuggagePicker } from '../ui/luggage-picker';
 
 interface RouteStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -118,29 +118,10 @@ export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) =>
             </div>
             <div className="flex flex-col space-y-2 w-full">
               <Label className="text-sm font-medium">Luggage</Label>
-              <div className="flex items-center w-full">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setLuggage(prev => Math.max(0, prev - 1))}
-                  aria-label="Decrease luggage"
-                  disabled={luggage <= 1}
-                  className="disabled:opacity-40"
-                >
-                  <MinusIcon className="h-4 w-4" />
-                </Button>
-                <span className="mx-4 font-medium">{luggage}</span>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setLuggage(prev => prev + 1)}
-                  aria-label="Increase luggage"
-                  disabled={luggage >= 12}
-                  className="disabled:opacity-40"
-                >
-                  <PlusIcon className="h-4 w-4" />
-                </Button>
-              </div>
+              <LuggagePicker
+                luggage={luggage}
+                setLuggage={setLuggage}
+              />
             </div>
           </div>
           <Button onClick={() => setStep(2)} className="w-full">Next Step</Button>
