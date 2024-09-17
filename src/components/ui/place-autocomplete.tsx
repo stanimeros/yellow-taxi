@@ -33,7 +33,7 @@ export function PlaceAutocomplete({ onSelect, placeholder = "Search places...", 
   useEffect(() => {
     if (input.length > 3 && selectedSuggestion?.description !== input) {
       setIsLoading(true);
-      fetch(`${api}/get_suggestions.php?input=${encodeURIComponent(input)}`)
+      fetch(`${api}/get_predictions.php?input=${encodeURIComponent(input)}`)
         .then(response => response.json())
         .then(data => {
           setSuggestions(data);

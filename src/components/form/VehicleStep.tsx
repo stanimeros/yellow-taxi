@@ -15,14 +15,14 @@ export const VehicleStep: React.FC<VehicleStepProps> = ({ setStep, globalState }
   const { 
     api, startDestination, endDestination,
     returnDateTime, adults, children,
-    vehicleCategory, setVehicleCategory,
+    setPrice, vehicleCategory, setVehicleCategory,
   } = globalState;
-  const [vehicleCategories, setVehicleCategories] = useState<VehicleCategory[]>([]);
+  const [options, setOptions] = useState<VehicleCategory[]>([]);
 
   useEffect(() => {
-    const fetchVehicleCategories = async () => {
+    const fetchoptions = async () => {
       try {
-        const response = await fetch(`${api}/get_pricing.php`, {
+        const response = await fetch(`${api}/get_options.php`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -35,34 +35,34 @@ export const VehicleStep: React.FC<VehicleStepProps> = ({ setStep, globalState }
           }),
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch vehicle categories');
+          throw new Error('Failed to fetch options');
         }
         const data = await response.json();
-        if (data.status === "success" && Array.isArray(data.categories)) {
-          const formattedCategories = data.categories.map((category: any) => ({
+        if (data.status === "success" && Array.isArray(data.options)) {
+          const formattedOptions = data.options.map((category: any) => ({
             name: category.title,
             image: category.image_url,
             description: category.description,
-            price: `$${category.price}`,
+            price: category.price,
             capacity: category.passengers,
             suitcases: category.suitcases,
             features: category.features,
           }));
-          setVehicleCategories(formattedCategories);
+          setOptions(formattedOptions);
         } else {
           throw new Error('Invalid response format');
         }
       } catch (error) {
-        console.error('Error fetching vehicle categories:', error);
+        console.error('Error fetching options:', error);
       }
     };
 
-    fetchVehicleCategories();
+    fetchoptions();
   }, []);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <Card className="flex flex-col justify-between space-y-4 lg:col-span-2 shadow-lg overflow-hidden p-6">
+    <div className="flex space-x-12 w-full">
+      <Card className="flex flex-col justify-between space-y-4 shadow-lg overflow-hidden p-6 w-2/3">
         <div className='flex flex-col space-y-4'>
           <div className="flex justify-between">
             <h2 className="text-2xl font-bold text-primary">Choose Your Vehicle</h2>
@@ -71,7 +71,7 @@ export const VehicleStep: React.FC<VehicleStepProps> = ({ setStep, globalState }
             </Button>
           </div>
           <div className="space-y-4">
-            {vehicleCategories.length === 0 ? (
+            {options.length === 0 ? (
               // Skeleton loading state
               Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className="flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg">
@@ -90,7 +90,7 @@ export const VehicleStep: React.FC<VehicleStepProps> = ({ setStep, globalState }
                 </div>
               ))
             ) : (
-              vehicleCategories.map((vehicle, index) => (
+              options.map((vehicle, index) => (
                 <div 
                   key={index} 
                   className={`flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors duration-200 ${
@@ -98,7 +98,10 @@ export const VehicleStep: React.FC<VehicleStepProps> = ({ setStep, globalState }
                       ? 'bg-primary/10 border-primary hover:bg-primary/20' 
                       : 'hover:bg-gray-50'
                   }`}
-                  onClick={() => setVehicleCategory(vehicle.name)}
+                  onClick={() => {
+                    setVehicleCategory(vehicle.name);
+                    setPrice(parseFloat(vehicle.price));
+                  }}
                 >
                   <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
                     <img src={vehicle.image} alt={vehicle.name} className="w-48 rounded-md mr-0 md:mr-4 mb-4 md:mb-0" />

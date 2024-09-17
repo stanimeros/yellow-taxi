@@ -32,6 +32,9 @@ export const BookingForm: React.FC = () => {
   const [boosterSeats, setBoosterSeats] = useState(0);
   const [bulkyLuggage, setBulkyLuggage] = useState(false);
   const [notes, setNotes] = useState('');
+  const [price, setPrice] = useState(0);
+  const [coupons, setCoupons] = useState<string[]>([]);
+
   const api = 'http://localhost/taxi/api'
 
   const globalState: GlobalState = {
@@ -57,7 +60,9 @@ export const BookingForm: React.FC = () => {
     babySeats, setBabySeats,
     boosterSeats, setBoosterSeats,
     bulkyLuggage, setBulkyLuggage,
-    notes, setNotes
+    notes, setNotes,
+    price, setPrice,
+    coupons, setCoupons
   };
 
   return (

@@ -16,12 +16,12 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
     email, name, areaCode, phone, 
     ferryName, airplaneName, 
     infantSeats, babySeats, 
-    boosterSeats, bulkyLuggage,  notes,
-    setDuration, setDistance
+    boosterSeats, bulkyLuggage, notes,
+    price, setDuration, setDistance
   } = globalState;
 
   return (
-    <Card className="flex flex-col justify-between shadow-lg overflow-hidden">
+    <Card className="flex flex-col justify-between shadow-lg overflow-hidden w-1/3 h-fit">
       <div className='p-6'>
         <h3 className="text-2xl font-bold mb-4 text-primary">Trip Summary</h3>
         <div className="space-y-3">
@@ -48,6 +48,12 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
           )}
           {bulkyLuggage && <p><strong>Bulky Luggage:</strong> Yes</p>}
           {notes && <p><strong>Notes:</strong> {notes}</p>}
+          {price && (
+            <p>
+              <strong>Total Price:</strong>{" "}
+              <span className="text-primary font-bold">{price}</span>
+            </p>
+          )}
         </div>
       </div>
       <div className="h-[400px]">

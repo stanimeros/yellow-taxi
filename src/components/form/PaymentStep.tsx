@@ -4,6 +4,7 @@ import { Card } from '../ui/card';
 import { GlobalState } from '../objects/GlobalState';
 import { TripSummary } from './TripSummary';
 import { Checkbox } from '../ui/checkbox';
+import { Coupon } from '../ui/coupon';
 
 interface PaymentStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -11,11 +12,12 @@ interface PaymentStepProps {
 }
 
 export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }) => {
+
   const [acceptTerms, setAcceptTerms] = useState(false);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <Card className="flex flex-col justify-between space-y-4 lg:col-span-2 shadow-lg overflow-hidden p-6">
+    <div className="flex space-x-12 w-full">
+      <Card className="flex flex-col justify-between space-y-4 shadow-lg overflow-hidden p-6 w-2/3">
         <div className="space-y-4">
           <div className="flex justify-between">
             <h2 className="text-2xl font-bold text-primary">Payment</h2>
@@ -23,6 +25,9 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
               Go Back
             </Button>
           </div>
+          <Coupon
+            globalState={globalState}
+          />
           <p className="text-sm text-gray-600 mb-4">
             Upon clicking "Pay", you will be redirected to our secure payment gateway powered by Stripe. There, you can safely complete your transaction using your preferred payment method.
           </p>
