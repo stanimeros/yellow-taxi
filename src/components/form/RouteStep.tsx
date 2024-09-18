@@ -38,17 +38,17 @@ export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) =>
             <div className="flex flex-col space-y-2 w-full">
               <Label htmlFor="start" className="text-sm font-medium">Start Destination</Label>
               <PlaceAutocomplete
-                onSelect={(value) => setStartDestination(value)}
-                placeholder="Type a place"
                 api={api}
+                selectedDescription={startDestination?.description}
+                onSelect={(value) => setStartDestination(value)}
               />
             </div>
             <div className="flex flex-col space-y-2 w-full">
               <Label htmlFor="end" className="text-sm font-medium">End Destination</Label>
               <PlaceAutocomplete
-                onSelect={(value) => setEndDestination(value)}
-                placeholder="Type a place"
                 api={api}
+                selectedDescription={endDestination?.description}
+                onSelect={(value) => setEndDestination(value)}
               />
             </div>
           </div>
@@ -58,7 +58,13 @@ export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) =>
               <DatePicker
                 id="pickup-date"
                 selected={pickupDateTime}
-                onSelect={setPickupDateTime}
+                onSelect={(datetime) => {
+                  if (datetime) {
+                    const newDate = new Date(datetime);
+                    newDate.setHours(9, 0, 0, 0);
+                    setPickupDateTime(newDate);
+                  }
+                }}
               />
             </div>
             <div className="flex flex-col space-y-2 w-full">
@@ -93,7 +99,13 @@ export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) =>
                 <DatePicker
                   id="return-date"
                   selected={returnDateTime}
-                  onSelect={setReturnDateTime}
+                  onSelect={(datetime) => {
+                    if (datetime) {
+                      const newDate = new Date(datetime);
+                      newDate.setHours(9, 0, 0, 0);
+                      setReturnDateTime(newDate);
+                    }
+                  }}
                 />
               </div>
               <div className="flex flex-col space-y-2 w-full">

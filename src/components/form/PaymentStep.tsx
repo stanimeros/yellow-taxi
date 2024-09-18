@@ -17,7 +17,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
 
   return (
     <div className="flex space-x-12 w-full">
-      <Card className="flex flex-col justify-between space-y-4 shadow-lg overflow-hidden p-6 w-2/3">
+      <Card className="flex flex-col justify-between space-y-4 shadow-lg overflow-hidden p-6 w-2/3 h-fit">
         <div className="space-y-4">
           <div className="flex justify-between">
             <h2 className="text-2xl font-bold text-primary">Payment</h2>

@@ -4,13 +4,14 @@ import {  MagnifyingGlassIcon } from "@radix-ui/react-icons"
 import { Suggestion } from '../objects/Suggestion';
 
 interface PlaceAutocompleteProps {
-  onSelect: (value: Suggestion) => void;
-  placeholder?: string;
   api: string;
+  placeholder?: string;
+  selectedDescription?: string;
+  onSelect: (value: Suggestion) => void;
 }
 
-export function PlaceAutocomplete({ onSelect, placeholder = "Search places...", api }: PlaceAutocompleteProps) {
-  const [input, setInput] = useState('');
+export function PlaceAutocomplete({ api, placeholder = "Search places...", selectedDescription = '', onSelect }: PlaceAutocompleteProps) {
+  const [input, setInput] = useState(selectedDescription);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -31,22 +32,23 @@ export function PlaceAutocomplete({ onSelect, placeholder = "Search places...", 
   }, []);
 
   useEffect(() => {
-    if (input.length > 3 && selectedSuggestion?.description !== input) {
+    if (input.length > 3 && input.length < 13 && selectedSuggestion?.description !== input) {
       setIsLoading(true);
+
       fetch(`${api}/get_predictions.php?input=${encodeURIComponent(input)}`)
-        .then(response => response.json())
-        .then(data => {
-          setSuggestions(data);
-          setShowSuggestions(true);
-        })
-        .catch(error => {
-          console.error('Error fetching suggestions:', error);
-        }).finally(() => {
-          setIsLoading(false);
-        });
-    } else {
-      setSuggestions([]);
+      .then(response => response.json())
+      .then(data => {
+        setSuggestions(data);
+        setShowSuggestions(true);
+      })
+      .catch(error => {
+        console.error('Error fetching predictions:', error);
+      }).finally(() => {
+        setIsLoading(false);
+      });
+    }else{
       setShowSuggestions(false);
+      setSuggestions([]);
     }
   }, [input]);
 
