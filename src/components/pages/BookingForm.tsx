@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RouteStep } from '../form/RouteStep';
 import { Suggestion } from '../objects/Suggestion';
 import { GlobalState } from '../objects/GlobalState';
-import { VehicleStep } from '../form/VehicleStep';
+import { OptionSteps } from '../form/OptionsStep';
 import { DetailsStep } from '../form/DetailsStep';
 import { PaymentStep } from '../form/PaymentStep';
 
@@ -18,7 +18,7 @@ export const BookingForm: React.FC = () => {
   const [duration, setDuration] = useState('');
   const [distance, setDistance] = useState('');
   const [luggage, setLuggage] = useState(0);
-  const [vehicleCategory, setVehicleCategory] = useState('');
+  const [vehicleOption, setVehicleOption] = useState('');
   const [language, setLanguage] = useState('en');
   const [theme, setTheme] = useState('light');
   const [email, setEmail] = useState('');
@@ -49,7 +49,7 @@ export const BookingForm: React.FC = () => {
     duration, setDuration,
     distance, setDistance,
     luggage, setLuggage,
-    vehicleCategory, setVehicleCategory,
+    vehicleOption, setVehicleOption,
     email, setEmail,
     name, setName,
     areaCode, setAreaCode,
@@ -84,7 +84,7 @@ export const BookingForm: React.FC = () => {
       </div>
       <div>
         {step === 1 && <RouteStep setStep={setStep} globalState={globalState} />}
-        {step === 2 && <VehicleStep setStep={setStep} globalState={globalState}/>}
+        {step === 2 && <OptionSteps setStep={setStep} globalState={globalState}/>}
         {step === 3 && <DetailsStep setStep={setStep} globalState={globalState} />}
         {step === 4 && <PaymentStep setStep={setStep} globalState={globalState}/>}
       </div>

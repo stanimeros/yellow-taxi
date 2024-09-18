@@ -1,4 +1,5 @@
 import { Suggestion } from "./Suggestion";
+import { VehicleOption } from "./VehicleOption";
 
 // Define the GlobalState type
 export type GlobalState = {
@@ -25,8 +26,8 @@ export type GlobalState = {
   setDistance: React.Dispatch<React.SetStateAction<string>>;
   luggage: number;
   setLuggage: React.Dispatch<React.SetStateAction<number>>;
-  vehicleCategory: string;
-  setVehicleCategory: React.Dispatch<React.SetStateAction<string>>;
+  vehicleOption: VehicleOption | null;
+  setVehicleOption: React.Dispatch<React.SetStateAction<VehicleOption | null>>;
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   name: string;

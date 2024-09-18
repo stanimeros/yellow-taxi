@@ -12,7 +12,7 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
     startDestination, endDestination,
     pickupDateTime, returnDateTime, 
     adults, children, duration, 
-    distance, luggage, vehicleCategory, 
+    distance, luggage, vehicleOption, 
     email, name, areaCode, phone, 
     ferryName, airplaneName, 
     infantSeats, babySeats, 
@@ -33,7 +33,7 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
           {duration && <p><strong>Duration:</strong> {duration}</p>}
           {distance && <p><strong>Distance:</strong> {distance}</p>}
           {luggage > 0 && <p><strong>Luggage:</strong> {luggage} pieces</p>}
-          {vehicleCategory && <p><strong>Vehicle:</strong> {vehicleCategory}</p>}
+          {vehicleOption && <p><strong>Vehicle:</strong> {vehicleOption.title}</p>}
           {name && <p><strong>Name:</strong> {name}</p>}
           {email && <p><strong>Email:</strong> {email}</p>}
           {areaCode && phone && <p><strong>Phone:</strong> +{areaCode} {phone}</p>}

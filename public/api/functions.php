@@ -28,7 +28,9 @@
         if(curl_errno($ch)){
             $error_msg = curl_error($ch);
             curl_close($ch);
-            return "Error in getPlaceDetails: $error_msg";
+            echo json_encode(['status' => 'failed', 'message' => 'Error: ' . $error_msg]);
+            $conn -> close();
+            exit();
         }
 
         curl_close($ch);
@@ -47,7 +49,7 @@
         return ['longitude' => $longitude, 'latitude' => $latitude];
     }
 
-    function getSuggestions($input, $conn){
+    function getPredictions($input, $conn){
         //Get predictions from local database
         $sql = "SELECT place_id, description FROM google_places WHERE description LIKE ? LIMIT 5;";
         $stmt = $conn->prepare($sql);
@@ -78,7 +80,9 @@
         if(curl_errno($ch)){
             $error_msg = curl_error($ch);
             curl_close($ch);
-            return "Error in getSuggestions: $error_msg";
+            echo json_encode(['status' => 'failed', 'message' => 'Error: ' . $error_msg]); 
+            $conn -> close();
+            exit();
         }
         curl_close($ch);
 
@@ -86,9 +90,31 @@
         $array_data = json_decode($response, true);
         $predictions = $array_data['predictions'];
         foreach ($predictions as $prediction) {
-            $sql = "INSERT IGNORE INTO google_places (place_id, description) VALUES (?, ?);";
+            $url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' 
+            . $prediction['place_id'] 
+            . '&fields=geometry'
+            . '&key=' . $keys['google_maps_api_key'];
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+
+            if(curl_errno($ch)){
+                $error_msg = curl_error($ch);
+                curl_close($ch);
+                echo json_encode(['status' => 'failed', 'message' => 'Error: ' . $error_msg]); 
+                $conn -> close();
+                exit();
+            }
+            curl_close($ch);
+
+            $details = json_decode($response, true);
+            $geometry = $details['result']['geometry'];
+            $longitude = $geometry['location']['lng'];
+            $latitude = $geometry['location']['lat'];
+
+            $sql = "INSERT IGNORE INTO google_places (place_id, description, longitude, latitude) VALUES (?, ?, ?, ?);";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ss", $prediction['place_id'], $prediction['description']);
+            $stmt->bind_param("ssdd", $prediction['place_id'], $prediction['description'], $longitude, $latitude);
             $stmt->execute();
             $stmt->close();
         }
@@ -97,6 +123,11 @@
     }
 
     function getPricing($from_id, $to_id, $conn){
+        if (empty($from_id) || empty($to_id)){ //TODO
+            $from_id = 'ChIJYVzn2RqQoRQRqrPuCt8Vsjg';
+            $to_id = 'ChIJU7Khupu9oRQRj-kopj1iZS8';
+        }
+
         $sql = "SELECT *
         FROM pricing
         WHERE 
@@ -133,11 +164,59 @@
             return $min_price;
         } else {
             $route = getDirections($from_id, $to_id);
-            $price = (float) $route['distance'] * 2;
-        
+            $price = floatval($route['distance']) * 2;
+
             return $price;
         }
+    }
 
+    function getOptionPriceRate($option_id, $conn){
+        $sql = "SELECT price_rate FROM options WHERE id = ?;";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $option_id);
+        $stmt->execute(); 
+        $result = $stmt->get_result(); 
+        $row = $result->fetch_assoc(); // Fetch the result into a variable
+        $stmt->close(); 
+        return $row['price_rate']; // Return the fetched price_rate
+    }
+
+    function applyCoupons($coupons, $conn){
+        if (empty($coupons)){
+            return 1;
+        }
+
+        $coupon_values = explode(',', $coupons);
+        if (count($coupon_values) > 1){
+            $placeholders = implode(', ', array_fill(0, count($coupon_values), '?'));
+            $sql = "SELECT SUM(rate) AS combined_rate, COUNT(*) AS count FROM coupons WHERE coupon IN ($placeholders) AND canCombine = '1';";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param(str_repeat('s', count($coupon_values)), ...$coupon_values); // Add bind_param with placeholders value
+            $stmt->execute();   
+            $result = $stmt->get_result();
+            $stmt->close();
+            $row = $result->fetch_assoc();
+            if ($row['count'] != count($coupon_values)){
+                echo json_encode(['status' => 'failed', 'message' => 'Invalid coupon combination']);
+                $conn -> close(); 
+                exit();
+            }
+
+            return number_format(1 - (floatval($row['combined_rate']) ?? 0), 3, '.', '');
+        }else if (count($coupon_values) == 1){
+            $sql = "SELECT rate FROM coupons WHERE coupon = ?;";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param('s', $coupon_values[0]);
+            $stmt->execute(); 
+            $result = $stmt->get_result(); 
+            $stmt->close(); 
+            if ($result->num_rows === 0) {
+                echo json_encode(['status' => 'failed', 'message' => 'Coupon not found']);
+                $conn->close();
+                exit();
+            }
+            return number_format(1 - (floatval($result->fetch_assoc()['rate']) ?? 0), 3, '.', '');
+        }
     }
 
     function getDirections($from_id, $to_id){
@@ -154,7 +233,9 @@
         if(curl_errno($ch)){
             $error_msg = curl_error($ch);
             curl_close($ch);
-            return "Error in getDirections: $error_msg";
+            echo json_encode(['status' => 'failed', 'message' => 'Error: ' . $error_msg]); 
+            $conn -> close();
+            exit();
         }
         curl_close($ch);
 
@@ -163,12 +244,8 @@
             $route = $data['routes'][0];
             $distance = $route['legs'][0]['distance']['text'];
             $duration = $route['legs'][0]['duration']['text'];
-        }else{
-            $distance = 10; //Test Values FIXME
-            $duration = 10; //Test Values FIXME
         }
 
         return ['distance' => $distance, 'duration' => $duration];
     }
-    
-?>
+?> 

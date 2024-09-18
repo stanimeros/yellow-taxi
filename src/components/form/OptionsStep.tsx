@@ -3,21 +3,21 @@ import { Button } from '@/components/ui/button';
 import { Card } from '../ui/card';
 import { GlobalState } from '../objects/GlobalState';
 import { TripSummary } from './TripSummary';
-import { VehicleCategory } from '../objects/VehicleCategory';
+import { VehicleOption } from '../objects/VehicleOption';
 import { Skeleton } from '../ui/skeleton';
 
-interface VehicleStepProps {
+interface OptionsStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
   globalState: GlobalState;
 }
 
-export const VehicleStep: React.FC<VehicleStepProps> = ({ setStep, globalState }) => {
+export const OptionSteps: React.FC<OptionsStepProps> = ({ setStep, globalState }) => {
   const { 
     api, startDestination, endDestination,
-    returnDateTime, adults, children,
-    setPrice, vehicleCategory, setVehicleCategory,
+    coupons, returnDateTime, adults, children,
+    setPrice, vehicleOption, setVehicleOption,
   } = globalState;
-  const [options, setOptions] = useState<VehicleCategory[]>([]);
+  const [options, setOptions] = useState<VehicleOption[]>([]);
 
   useEffect(() => {
     const fetchoptions = async () => {
@@ -31,24 +31,25 @@ export const VehicleStep: React.FC<VehicleStepProps> = ({ setStep, globalState }
             startId: startDestination?.place_id,
             endId: endDestination?.place_id,
             returnDate: returnDateTime?.toISOString() ?? null,
-            passengers: adults + children,  
+            passengers: adults + children, 
+            coupons: [...coupons].join(','), 
           }),
         });
-        if (!response.ok) {
+        if (!response.ok) { 
           throw new Error('Failed to fetch options');
         }
         const data = await response.json();
         if (data.status === "success" && Array.isArray(data.options)) {
-          const formattedOptions = data.options.map((category: any) => ({
-            name: category.title,
-            image: category.image_url,
-            description: category.description,
-            price: category.price,
-            capacity: category.passengers,
-            suitcases: category.suitcases,
-            features: category.features,
+          const vehicleOptions = data.options.map((option: any) => ({
+            id: parseInt(option.id),
+            title: option.title,
+            description: option.description,
+            price: parseFloat(option.price),
+            image_url: option.image_url,
+            max_passengers: parseInt(option.max_passengers),
+            max_luggage: parseInt(option.max_luggage),
           }));
-          setOptions(formattedOptions);
+          setOptions(vehicleOptions);
         } else {
           throw new Error('Invalid response format');
         }
@@ -90,34 +91,34 @@ export const VehicleStep: React.FC<VehicleStepProps> = ({ setStep, globalState }
                 </div>
               ))
             ) : (
-              options.map((vehicle, index) => (
+              options.map((option, index) => (
                 <div 
                   key={index} 
                   className={`flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors duration-200 ${
-                    globalState.vehicleCategory === vehicle.name 
+                    globalState.vehicleOption?.title === option.title 
                       ? 'bg-primary/10 border-primary hover:bg-primary/20' 
                       : 'hover:bg-gray-50'
                   }`}
                   onClick={() => {
-                    setVehicleCategory(vehicle.name);
-                    setPrice(parseFloat(vehicle.price));
+                    setVehicleOption(option);
+                    setPrice(option.price);
                   }}
                 >
                   <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
-                    <img src={vehicle.image} alt={vehicle.name} className="w-48 rounded-md mr-0 md:mr-4 mb-4 md:mb-0" />
+                    <img src={option.image_url} alt={option.title} className="w-48 rounded-md mr-0 md:mr-4 mb-4 md:mb-0" />
                     <div>
-                      <h3 className="text-lg font-semibold">{vehicle.name}</h3>
-                      <p className="text-sm text-gray-600">{vehicle.description}</p>
-                      <p className="text-sm text-gray-600">Capacity: {vehicle.capacity}</p>
+                      <h3 className="text-lg font-semibold">{option.title}</h3>
+                      <p className="text-sm text-gray-600">{option.description}</p>
+                      <p className="text-sm text-gray-600">Capacity: {option.max_passengers}</p>
                     </div>
                   </div>
                   <div className="text-center md:text-right">
-                    <p className="text-lg font-bold mb-2">{vehicle.price}</p>
+                    <p className="text-lg font-bold mb-2">{option.price}</p>
                     <Button 
                       size="sm"
-                      variant={vehicleCategory === vehicle.name ? "default" : "outline"}
+                      variant={vehicleOption?.title === option.title ? "default" : "outline"}
                     >
-                      {vehicleCategory === vehicle.name ? "Selected" : "Select"}
+                      {vehicleOption?.title === option.title ? "Selected" : "Select"}
                     </Button>
                   </div>
                 </div>

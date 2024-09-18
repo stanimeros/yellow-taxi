@@ -12,6 +12,7 @@ interface CouponProps {
 export const Coupon: React.FC<CouponProps> = ({ globalState }) => {
   const {
     api, returnDateTime, setPrice,
+    vehicleOption,
     startDestination, endDestination,
     coupons, setCoupons
   } = globalState;
@@ -30,6 +31,7 @@ export const Coupon: React.FC<CouponProps> = ({ globalState }) => {
           body: JSON.stringify({
             startId: startDestination?.place_id ?? null,
             endId: endDestination?.place_id ?? null,
+            optionId: vehicleOption?.id ?? null,
             returnDate: returnDateTime?.toISOString() ?? null,
             coupons: [...coupons, coupon].join(','),
           }),
@@ -82,6 +84,7 @@ export const Coupon: React.FC<CouponProps> = ({ globalState }) => {
         body: JSON.stringify({
           startId: startDestination?.place_id ?? null,
           endId: endDestination?.place_id ?? null,
+          optionId: vehicleOption?.id ?? null,
           returnDate: returnDateTime?.toISOString() ?? null,
           coupons: [...updatedCoupons].join(','),
         }),
