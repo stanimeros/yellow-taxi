@@ -5,6 +5,8 @@ import { GlobalState } from '../objects/GlobalState';
 import { OptionSteps } from '../form/OptionsStep';
 import { DetailsStep } from '../form/DetailsStep';
 import { PaymentStep } from '../form/PaymentStep';
+import { VehicleOption } from '../objects/VehicleOption';
+import { TripSummary } from '../form/TripSummary';
 
 export const BookingForm: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -18,7 +20,7 @@ export const BookingForm: React.FC = () => {
   const [duration, setDuration] = useState('');
   const [distance, setDistance] = useState('');
   const [luggage, setLuggage] = useState(0);
-  const [vehicleOption, setVehicleOption] = useState('');
+  const [vehicleOption, setVehicleOption] = useState<VehicleOption | null>(null);
   const [language, setLanguage] = useState('en');
   const [theme, setTheme] = useState('light');
   const [email, setEmail] = useState('');
@@ -66,7 +68,7 @@ export const BookingForm: React.FC = () => {
   };
 
   return (
-    <div className="m-16">
+    <div className="m-[5%]">
       <div className="w-full mb-6">
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div 
@@ -84,9 +86,14 @@ export const BookingForm: React.FC = () => {
       </div>
       <div>
         {step === 1 && <RouteStep setStep={setStep} globalState={globalState} />}
-        {step === 2 && <OptionSteps setStep={setStep} globalState={globalState}/>}
-        {step === 3 && <DetailsStep setStep={setStep} globalState={globalState} />}
-        {step === 4 && <PaymentStep setStep={setStep} globalState={globalState}/>}
+        {step > 1 && 
+          <div className="flex flex-wrap gap-12 w-full">
+            {step === 2 && <OptionSteps setStep={setStep} globalState={globalState}/>}
+            {step === 3 && <DetailsStep setStep={setStep} globalState={globalState} />}
+            {step === 4 && <PaymentStep setStep={setStep} globalState={globalState}/>}
+            <TripSummary globalState={globalState}/>
+          </div>
+        }
       </div>
     </div>
   );

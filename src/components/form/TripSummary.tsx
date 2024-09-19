@@ -21,7 +21,7 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
   } = globalState;
 
   return (
-    <Card className="flex flex-col justify-between shadow-lg overflow-hidden w-1/3 h-fit">
+    <Card className="flex flex-col justify-between shadow-lg overflow-hidden flex-shrink w-[300px] h-fit mx-auto">
       <div className='p-6'>
         <h3 className="text-2xl font-bold mb-4 text-primary">Trip Summary</h3>
         <div className="space-y-3">

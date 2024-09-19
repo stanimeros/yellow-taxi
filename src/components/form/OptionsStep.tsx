@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '../ui/card';
 import { GlobalState } from '../objects/GlobalState';
-import { TripSummary } from './TripSummary';
 import { VehicleOption } from '../objects/VehicleOption';
 import { Skeleton } from '../ui/skeleton';
 
@@ -62,73 +61,70 @@ export const OptionSteps: React.FC<OptionsStepProps> = ({ setStep, globalState }
   }, []);
 
   return (
-    <div className="flex space-x-12 w-full">
-      <Card className="flex flex-col justify-between space-y-4 shadow-lg overflow-hidden p-6 w-2/3 h-fit">
-        <div className='flex flex-col space-y-4'>
-          <div className="flex justify-between">
-            <h2 className="text-2xl font-bold text-primary">Choose Your Vehicle</h2>
-            <Button variant="outline" onClick={() => setStep(1)}>
-              Go Back
-            </Button>
-          </div>
-          <div className="space-y-4">
-            {options.length === 0 ? (
-              // Skeleton loading state
-              Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg">
-                  <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0 w-full">
-                    <Skeleton className="w-48 h-32 rounded-md mr-0 md:mr-4 mb-4 md:mb-0" />
-                    <div className="w-full">
-                      <Skeleton className="h-6 w-3/4 mb-2" />
-                      <Skeleton className="h-4 w-full mb-2" />
-                      <Skeleton className="h-4 w-1/2" />
-                    </div>
-                  </div>
-                  <div className="text-center md:text-right">
-                    <Skeleton className="h-6 w-20 mb-2" />
-                    <Skeleton className="h-8 w-24" />
-                  </div>
-                </div>
-              ))
-            ) : (
-              options.map((option, index) => (
-                <div 
-                  key={index} 
-                  className={`flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors duration-200 ${
-                    globalState.vehicleOption?.title === option.title 
-                      ? 'bg-primary/10 border-primary hover:bg-primary/20' 
-                      : 'hover:bg-gray-50'
-                  }`}
-                  onClick={() => {
-                    setVehicleOption(option);
-                    setPrice(option.price);
-                  }}
-                >
-                  <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
-                    <img src={option.image_url} alt={option.title} className="w-48 rounded-md mr-0 md:mr-4 mb-4 md:mb-0" />
-                    <div>
-                      <h3 className="text-lg font-semibold">{option.title}</h3>
-                      <p className="text-sm text-gray-600">{option.description}</p>
-                      <p className="text-sm text-gray-600">Capacity: {option.max_passengers}</p>
-                    </div>
-                  </div>
-                  <div className="text-center md:text-right">
-                    <p className="text-lg font-bold mb-2">{option.price}</p>
-                    <Button 
-                      size="sm"
-                      variant={vehicleOption?.title === option.title ? "default" : "outline"}
-                    >
-                      {vehicleOption?.title === option.title ? "Selected" : "Select"}
-                    </Button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+    <Card className="flex flex-col justify-between space-y-4 shadow-lg overflow-hidden p-6 flex-grow h-fit">
+      <div className='flex flex-col space-y-4'>
+        <div className="flex justify-between">
+          <h2 className="text-2xl font-bold text-primary">Choose Your Vehicle</h2>
+          <Button variant="outline" onClick={() => setStep(1)}>
+            Go Back
+          </Button>
         </div>
-        <Button onClick={() => setStep(3)} className="w-full">Next Step</Button>
-      </Card>
-      <TripSummary globalState={globalState}/>
-    </div>
+        <div className="space-y-4">
+          {options.length === 0 ? (
+            // Skeleton loading state
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg">
+                <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0 w-full">
+                  <Skeleton className="w-48 h-32 rounded-md mr-0 md:mr-4 mb-4 md:mb-0" />
+                  <div className="w-full">
+                    <Skeleton className="h-6 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                </div>
+                <div className="text-center md:text-right">
+                  <Skeleton className="h-6 w-20 mb-2" />
+                  <Skeleton className="h-8 w-24" />
+                </div>
+              </div>
+            ))
+          ) : (
+            options.map((option, index) => (
+              <div 
+                key={index} 
+                className={`flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors duration-200 ${
+                  globalState.vehicleOption?.title === option.title 
+                    ? 'bg-primary/10 border-primary hover:bg-primary/20' 
+                    : 'hover:bg-gray-50'
+                }`}
+                onClick={() => {
+                  setVehicleOption(option);
+                  setPrice(option.price);
+                }}
+              >
+                <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
+                  <img src={option.image_url} alt={option.title} className="w-48 rounded-md mr-0 md:mr-4 mb-4 md:mb-0" />
+                  <div>
+                    <h3 className="text-lg font-semibold">{option.title}</h3>
+                    <p className="text-sm text-gray-600">{option.description}</p>
+                    <p className="text-sm text-gray-600">Capacity: {option.max_passengers}</p>
+                  </div>
+                </div>
+                <div className="text-center md:text-right">
+                  <p className="text-lg font-bold mb-2">{`${option.price}€`}</p>
+                  <Button 
+                    size="sm"
+                    variant={vehicleOption?.title === option.title ? "default" : "outline"}
+                  >
+                    {vehicleOption?.title === option.title ? "Selected" : "Select"}
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+      <Button onClick={() => setStep(3)} className="w-full">Next Step</Button>
+    </Card>
   );
 };

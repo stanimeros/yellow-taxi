@@ -30,8 +30,8 @@ export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) =>
   const [isReturnEnabled, setIsReturnEnabled] = useState(false);
 
   return (
-    <div className="flex space-x-12 w-full">
-      <Card className="p-6 shadow-lg w-2/3">
+    <div className="flex flex-wrap gap-12 w-full">
+      <Card className="p-6 shadow-lg flex-grow">
         <h2 className="text-3xl font-bold mb-6 text-primary">Book Your Ride</h2>
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -139,7 +139,7 @@ export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) =>
           <Button onClick={() => setStep(2)} className="w-full">Next Step</Button>
         </div>
       </Card>
-      <Card className="shadow-lg overflow-hidden w-1/3">
+      <Card className="shadow-lg overflow-hidden flex-shrink w-[300px] h-[450px] mx-auto">
         <Map
           fromDestinationID={startDestination?.place_id || null}
           toDestinationID={endDestination?.place_id || null}

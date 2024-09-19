@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '../ui/input';
-import { XIcon } from 'lucide-react'
+import { Loader2, XIcon } from 'lucide-react'
 import { GlobalState } from '../objects/GlobalState';
 import { toast } from 'sonner';
 
@@ -18,10 +18,11 @@ export const Coupon: React.FC<CouponProps> = ({ globalState }) => {
   } = globalState;
 
   const [coupon, setCoupon] = useState('');
-
+  const [loading, setLoading] = useState(false);
 
   const handleApplyCoupon = async () => {
     if (coupon.trim() !== '') {
+      setLoading(true); // Set loading to true when API call starts
       try {
         const response = await fetch(`${api}/apply_coupon.php`, {
           method: 'POST',
@@ -67,6 +68,8 @@ export const Coupon: React.FC<CouponProps> = ({ globalState }) => {
         toast.error("Oops! Something didn't go as planned", {
           description: "There was a problem with your request.",
         });
+      }finally {
+        setLoading(false); // Set loading back to false after API call completes
       }
     }
   };
@@ -118,7 +121,16 @@ export const Coupon: React.FC<CouponProps> = ({ globalState }) => {
           onChange={(e) => setCoupon(e.target.value)}
           placeholder="Enter coupon code"
         />
-        <Button onClick={handleApplyCoupon}>Apply</Button>
+       <Button onClick={handleApplyCoupon} className="p-4 w-40 rounded-md flex items-center justify-center gap-2 bg-primary text-white">
+          {loading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Applying...</span>
+            </>
+          ) : (
+            <span>Apply</span>
+          )}
+        </Button>
       </div>
       <div className='flex flex-wrap flex-row gap-2 my-2'>
         {coupons.length > 0 && coupons.map((appliedCoupon, index) => (
