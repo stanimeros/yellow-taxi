@@ -34,7 +34,7 @@ export const BookingForm: React.FC = () => {
   const [boosterSeats, setBoosterSeats] = useState(0);
   const [bulkyLuggage, setBulkyLuggage] = useState(false);
   const [notes, setNotes] = useState('');
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState<number | undefined>(undefined);
   const [coupons, setCoupons] = useState<string[]>([]);
 
   const api = 'http://localhost/taxi/api'

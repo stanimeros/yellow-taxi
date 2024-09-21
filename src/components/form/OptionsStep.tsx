@@ -111,7 +111,7 @@ export const OptionSteps: React.FC<OptionsStepProps> = ({ setStep, globalState }
                   </div>
                 </div>
                 <div className="text-center md:text-right">
-                  <p className="text-lg font-bold mb-2">{`${option.price}€`}</p>
+                  <p className="text-lg font-bold mb-2">{`${option.price.toFixed(2)}€`}</p>
                   <Button 
                     size="sm"
                     variant={vehicleOption?.title === option.title ? "default" : "outline"}

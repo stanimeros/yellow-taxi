@@ -50,8 +50,8 @@ export type GlobalState = {
   setBulkyLuggage: React.Dispatch<React.SetStateAction<boolean>>;
   notes: string;
   setNotes: React.Dispatch<React.SetStateAction<string>>;
-  price: number;
-  setPrice: React.Dispatch<React.SetStateAction<number>>;
+  price: number | undefined;
+  setPrice: React.Dispatch<React.SetStateAction<number | undefined>>;
   coupons: string[];
   setCoupons: React.Dispatch<React.SetStateAction<string[]>>;
 };

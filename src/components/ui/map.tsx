@@ -52,15 +52,17 @@ export function Map({ fromDestinationID, toDestinationID, setDuration, setDistan
     }
   }, [isLoaded, fromDestinationID, toDestinationID, setDuration, setDistance]);
 
-  if (!isLoaded) return null;
-
   return (
-    <GoogleMap
-      mapContainerStyle={style}
-      center={center}
-      zoom={10}
-    >
-      {directions && <DirectionsRenderer directions={directions} />}
-    </GoogleMap>
+    <div className='w-full h-full min-w-[300px] min-h-[400px] bg-gray-100'>
+      {isLoaded && 
+        <GoogleMap
+        mapContainerStyle={style}
+        center={center}
+        zoom={10}
+      >
+        {directions && <DirectionsRenderer directions={directions} />}
+        </GoogleMap>
+      }
+    </div>
   );
 }

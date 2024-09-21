@@ -27,7 +27,7 @@ export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) =>
     setDuration, setDistance,
     luggage, setLuggage } = globalState;
 
-  const [isReturnEnabled, setIsReturnEnabled] = useState(false);
+  const [isReturnEnabled, setIsReturnEnabled] = useState(returnDateTime != null);
 
   return (
     <div className="flex flex-wrap gap-12 w-full">
@@ -139,7 +139,7 @@ export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) =>
           <Button onClick={() => setStep(2)} className="w-full">Next Step</Button>
         </div>
       </Card>
-      <Card className="shadow-lg overflow-hidden flex-shrink w-[300px] h-[450px] mx-auto">
+      <Card className="shadow-lg overflow-hidden flex-shrink mx-auto">
         <Map
           fromDestinationID={startDestination?.place_id || null}
           toDestinationID={endDestination?.place_id || null}
