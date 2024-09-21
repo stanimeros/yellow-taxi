@@ -1,25 +1,25 @@
-
 import { Input } from "@/components/ui/input";
-import { IconProps } from '@radix-ui/react-icons/dist/types';
+import { ReactNode } from "react";
 
 interface InputIconProps {
-  icon?: IconProps 
+  icon?: ReactNode;
   placeholder?: string;
   inputValue?: string;
-  setInputValue: (value: String) => void;
+  setInputValue: (value: string) => void;
 }
 
 export function InputIcon({ icon, placeholder, inputValue, setInputValue }: InputIconProps) {
-
   return (
-    <div className="relative">
-      {icon}
+    <div className="relative flex items-center">
+      <div className="absolute pl-2">
+        {icon}
+      </div>
       <Input
         type="text"
         value={inputValue}
-        onChange={setInputValue}
+        onChange={(e) => setInputValue(e.target.value)}
         placeholder={placeholder}
-        className="w-full pl-9"
+        className="w-full pl-8"
       />
     </div>
   );

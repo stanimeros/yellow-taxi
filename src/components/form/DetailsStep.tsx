@@ -11,6 +11,9 @@ import { ChildSeatsPicker } from '../ui/child-seats-picker';
 import { Switch } from '../ui/switch';
 import { PersonIcon, EnvelopeClosedIcon, GlobeIcon, MobileIcon, Pencil2Icon } from '@radix-ui/react-icons';
 import { AreaCodePicker } from '../ui/area-code-picker';
+import { InputIcon } from '../ui/input-icon';
+import { PlaneIcon, ShipIcon } from 'lucide-react'
+
 
 interface DetailsStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -131,11 +134,11 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
               </div>
             </RadioGroup>
             {(showFerryInput || showAirplaneInput) && (
-              <Input
-                id='transport-name'
-                value={showFerryInput? ferryName : airplaneName}
+              <InputIcon
+                icon = {showFerryInput ? <ShipIcon className='w-4'/> : <PlaneIcon className='w-4'/>}
+                inputValue = {showFerryInput ? ferryName : airplaneName}
+                setInputValue = {showFerryInput ? setFerryName : setAirplaneName}
                 placeholder={showFerryInput ? "Enter ferry name" : "Enter airplane name"}
-                onChange={(e) => showFerryInput ? setFerryName(e.target.value) : setAirplaneName(e.target.value)}
               />
             )}
           </div>
