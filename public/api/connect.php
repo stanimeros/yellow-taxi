@@ -1,5 +1,6 @@
 <?php
     require("functions.php");
+    require("keys.php");
 
     $servername = "localhost";
     $dbname = $keys['dbname'];

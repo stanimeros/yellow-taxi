@@ -31,6 +31,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
 
   const handleSubmit = async () => {
     setLoading(true);
+
     try {
       const response = await fetch(`${api}/submit.php`, {
         method: 'POST',
@@ -40,16 +41,15 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
         body: JSON.stringify({
           startDestinationId: startDestination?.place_id,
           endDestinationId: endDestination?.place_id,
-          pickupDateTime: pickupDateTime?.toISOString(),
-          returnDateTime: returnDateTime?.toISOString(),
+          pickupDateTime: formatDateForGreece(pickupDateTime!),
+          returnDateTime: returnDateTime ? formatDateForGreece(returnDateTime) : null,
           adults: adults,
           children: children,
           luggage: luggage,
-          vehicleOption: vehicleOption,
+          vehicleOptionId: vehicleOption?.id,
           email: email,
           name: name,
-          areaCode: areaCode,
-          phone: phone,
+          phone: `${areaCode} ${phone}`,
           ferryName: ferryName,
           airplaneName: airplaneName,
           infantSeats: infantSeats, 
@@ -57,7 +57,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
           boosterSeats: boosterSeats,
           bulkyLuggage: bulkyLuggage,
           notes: notes,
-          coupons: coupons
+          coupons: coupons.join(',')
         }),
       });
       if (!response.ok) { 
@@ -65,16 +65,42 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
       }
       const data = await response.json();
       if (data.status === "success") {
-        console.log('Success');
+        window.location.href = data.redirect_url;
       } else {
         throw new Error(data.message);
       }
     } catch (error) {
       console.error('Error while submitting:', error);
     }finally{
-      // setLoading(false);
+      setLoading(false);
     }
   };
+
+  function formatDateForGreece(date: { getMonth: () => number; getDate: () => number; getFullYear: () => number; getTime: () => number; getTimezoneOffset: () => number; }) {
+    // Determine if Greece is in DST (Greece follows DST from last Sunday in March to last Sunday in October)
+    const isDST = (date.getMonth() > 2 && date.getMonth() < 9) || // Between April (index 3) and September (index 9)
+      (date.getMonth() === 2 && date.getDate() >= (31 - (new Date(date.getFullYear(), 2, 1).getDay() + 1))) || // Last Sunday in March
+      (date.getMonth() === 9 && date.getDate() < (31 - new Date(date.getFullYear(), 9, 1).getDay())); // Before last Sunday in October
+  
+    const timezoneOffset = isDST ? 180 : 120; // UTC+3 for DST, UTC+2 for standard time
+  
+    // Get the current UTC time in milliseconds
+    const utcTime = date.getTime() + date.getTimezoneOffset() * 60000;
+  
+    // Calculate the new time by applying the timezone offset (in minutes)
+    const newTime = new Date(utcTime + timezoneOffset * 60000);
+  
+    // Extract the year, month, day, hours, and minutes
+    const year = newTime.getFullYear();
+    const month = String(newTime.getMonth() + 1).padStart(2, '0');
+    const day = String(newTime.getDate()).padStart(2, '0');
+    const hours = String(newTime.getHours()).padStart(2, '0');
+    const minutes = String(newTime.getMinutes()).padStart(2, '0');
+    // const seconds = String(newTime.getSeconds()).padStart(2, '0');
+  
+    // Return the formatted date-time string
+    return `${year}-${month}-${day} ${hours}:${minutes}:00`;
+  }
 
   return (
     <Card className="flex flex-col justify-between space-y-4 shadow-lg overflow-hidden p-6 flex-grow h-fit sm:w-1/2">

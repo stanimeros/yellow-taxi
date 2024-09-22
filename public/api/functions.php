@@ -1,6 +1,7 @@
 <?php
 
     function getPlaceDetails($placeID, $conn){
+        require("keys.php");
         //Get place details from local database
         $sql = "SELECT longitude, latitude FROM google_places WHERE place_id = ?;";
         $stmt = $conn->prepare($sql);
@@ -16,7 +17,6 @@
         }
 
         //Get place details from Google
-        require_once("keys.php");
         $url = 'https://maps.googleapis.com/maps/api/place/details/json?'
         . 'placeid=' . urlencode($placeID)
         . '&fields=geometry'
@@ -67,7 +67,7 @@
         }
 
         //Get predictions from Google
-        require_once("keys.php");
+        require("keys.php");
         $url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?'
         . 'input=' . urlencode($input)
         . '&types=establishment'
@@ -122,7 +122,7 @@
         return $predictions;
     }
 
-    function getPricing($from_id, $to_id, $conn){
+    function getPricing($from_id, $to_id, $return_datetime, $option_id, $coupons, $conn){
         if (empty($from_id) || empty($to_id)){ //TODO
             $from_id = 'ChIJYVzn2RqQoRQRqrPuCt8Vsjg';
             $to_id = 'ChIJU7Khupu9oRQRj-kopj1iZS8';
@@ -161,13 +161,23 @@
             $price_values = array_column($prices, 'price');
             $min_price = min($price_values);
             
-            return $min_price;
+            $price = $min_price;
         } else {
             $route = getDirections($from_id, $to_id);
             $price = floatval($route['distance']) * 2;
-
-            return $price;
         }
+
+        if ($return_datetime != null){
+            $price *= 1.8; //Apply 20% discount
+        }
+
+        if ($option_id != null){
+            $price *= getOptionPriceRate($option_id, $conn);
+        }
+
+        $coupons_discount = applyCoupons($coupons, $conn);
+        $price *= $coupons_discount;
+        return $price;
     }
 
     function getOptionPriceRate($option_id, $conn){
@@ -220,7 +230,7 @@
     }
 
     function getDirections($from_id, $to_id){
-        require_once("keys.php");
+        require("keys.php");
         $url = 'https://maps.googleapis.com/maps/api/directions/json?'
         . 'origin=place_id:' . $from_id
         . '&destination=place_id:' . $to_id

@@ -38,7 +38,7 @@ export const BookingForm: React.FC = () => {
   const [coupons, setCoupons] = useState<string[]>([]);
   const [api] = useState(
 		window.location.href.includes('localhost')
-			? 'http://localhost/taxi/public/api' //Development API
+			? 'http://localhost/taxi/api' //Development API
 			: '/api' //Production API
 	);
 

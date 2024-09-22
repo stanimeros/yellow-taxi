@@ -5,14 +5,7 @@
         $data = json_decode($json_data, true);
 
         $options = [];
-        $price = getPricing($data['startId'] ?? '', $data['endId'] ?? '', $conn); //TODO 
-
-        if ($data['returnDate'] != null){
-            $price = $price * 1.8; //Apply 20% discount
-        }
-
-        $coupons_discount = applyCoupons($data['coupons'], $conn);
-        $price *= $coupons_discount;
+        $price = getPricing($data['startId'] ?? '', $data['endId'] ?? '', $data['returnDate'], null, $data['coupons'], $conn);
 
         $sql = "SELECT * FROM options WHERE max_passengers >= ?;";
         $stmt = $conn->prepare($sql);

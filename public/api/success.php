@@ -10,5 +10,5 @@
     }
 
     $conn -> close();
-    header("Location: https://yellow-van.stanimeros.com/success");
+    header("Location: https://yellow-taxi.stanimeros.com/success");
 ?>
