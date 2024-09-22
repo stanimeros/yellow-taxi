@@ -5,7 +5,7 @@
         $data = json_decode($json_data, true);
 
         $options = [];
-        $price = getPricing($data['startId'] ?? '', $data['endId'] ?? '', $data['returnDate'], null, $data['coupons'], $conn);
+        $price = getPricing($data['startId'], $data['endId'], $data['returnDate'], null, $data['coupons'], $conn);
 
         $sql = "SELECT * FROM options WHERE max_passengers >= ?;";
         $stmt = $conn->prepare($sql);

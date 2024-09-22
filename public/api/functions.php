@@ -123,11 +123,6 @@
     }
 
     function getPricing($from_id, $to_id, $return_datetime, $option_id, $coupons, $conn){
-        if (empty($from_id) || empty($to_id)){ //TODO
-            $from_id = 'ChIJYVzn2RqQoRQRqrPuCt8Vsjg';
-            $to_id = 'ChIJU7Khupu9oRQRj-kopj1iZS8';
-        }
-
         $sql = "SELECT *
         FROM pricing
         WHERE 
@@ -254,9 +249,6 @@
             $route = $data['routes'][0];
             $distance = $route['legs'][0]['distance']['text'];
             $duration = $route['legs'][0]['duration']['text'];
-        }else{
-            $distance = 10; //TODO
-            $duration = 10;
         }
 
         return ['distance' => $distance, 'duration' => $duration];
