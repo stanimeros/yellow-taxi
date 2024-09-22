@@ -48,8 +48,7 @@ export const Coupon: React.FC<CouponProps> = ({ globalState }) => {
             setCoupons([...coupons, coupon]);
             setCoupon('');
             
-            const updatedPrice = data.price;
-            setPrice(updatedPrice);
+            setPrice(Number(data.price));
           } else {
             if (coupons.length == 0){
               toast.error("Oops! Something didn't go as planned", {
@@ -96,8 +95,7 @@ export const Coupon: React.FC<CouponProps> = ({ globalState }) => {
       if (response.ok) {
         const data = await response.json();
         if (data.status === "success") {
-          const updatedPrice = data.price;
-          setPrice(updatedPrice);
+          setPrice(Number(data.price));
         } else {
           toast.error("Oops! Something didn't go as planned", {
             description: data.message,

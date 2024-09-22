@@ -14,7 +14,6 @@ import { AreaCodePicker } from '../ui/area-code-picker';
 import { InputIcon } from '../ui/input-icon';
 import { PlaneIcon, ShipIcon } from 'lucide-react'
 
-
 interface DetailsStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
   globalState: GlobalState;
@@ -171,21 +170,23 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
               />
             )}
           </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="bulkyLuggage" 
-              checked={bulkyLuggage}
-              onCheckedChange={(checked: boolean) => setBulkyLuggage(checked)}
-            />
-            <Label htmlFor="bulkyLuggage" className="flex items-center">
-              I have bulky luggage
-            </Label>
-          </div>
           <div className="space-y-2">
-            <Label htmlFor="notes" className="flex items-center">
-              <Pencil2Icon className="w-4 h-4 mr-2" />
-              Additional Notes
-            </Label>
+            <div className='flex justify-between'>
+              <Label htmlFor="notes" className="flex items-center">
+                <Pencil2Icon className="w-4 h-4 mr-2" />
+                Additional Notes
+              </Label>
+                <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="bulkyLuggage" 
+                  checked={bulkyLuggage}
+                  onCheckedChange={(checked: boolean) => setBulkyLuggage(checked)}
+                />
+                <Label htmlFor="bulkyLuggage" className="flex items-center">
+                  I have bulky luggage
+                </Label>
+              </div>
+            </div>
             <Textarea 
               id="notes"
               placeholder="Enter any additional information" 

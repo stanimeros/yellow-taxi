@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Input } from "@/components/ui/input";
-import {  MagnifyingGlassIcon } from "@radix-ui/react-icons"
+import { useState, useEffect, useRef } from 'react';
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
 import { Suggestion } from '../objects/Suggestion';
+import { InputIcon } from './input-icon';
 
 interface PlaceAutocompleteProps {
   api: string;
@@ -52,10 +52,6 @@ export function PlaceAutocomplete({ api, placeholder = "Search places...", selec
     }
   }, [input]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
-
   const handleSuggestionClick = (suggestion: Suggestion) => {
     setInput(suggestion.description);
     setSelectedSuggestion(suggestion);
@@ -65,16 +61,12 @@ export function PlaceAutocomplete({ api, placeholder = "Search places...", selec
 
   return (
     <div ref={autocompleteRef} className="relative">
-      <div className="relative">
-        <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
-        <Input
-          type="text"
-          value={input}
-          onChange={handleInputChange}
-          placeholder={placeholder}
-          className="w-full pl-9"
-        />
-      </div>
+      <InputIcon
+        icon = {<MagnifyingGlassIcon className='w-4'/>}
+        inputValue = {input}
+        setInputValue = {setInput}
+        placeholder={placeholder}
+      />
       {isLoading && (
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>

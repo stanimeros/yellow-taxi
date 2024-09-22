@@ -37,7 +37,7 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
           </>
         }
         {(ferryName || airplaneName || infantSeats > 0 ||
-        babySeats > 0 || boosterSeats > 0 || bulkyLuggage || notes) &&
+        babySeats > 0 || boosterSeats > 0 || bulkyLuggage) &&
           <>
             <h4 className='text-l font-bold'>More information</h4>
             {ferryName && <p>Ferry: {ferryName}</p>}
@@ -51,14 +51,14 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
               </p>
             )}
             {bulkyLuggage && <p>Bulky Luggage: Yes</p>}
-            {notes && 
-              <>
-                <h4 className='text-l font-bold'>Notes</h4>
-                <p>{notes}</p>
-              </>
-            } 
           </>
         }
+        {notes && 
+          <>
+            <h4 className='text-l font-bold'>Notes</h4>
+            <p>{notes}</p>
+          </>
+        } 
         {price && (
           <p className='text-xl mt-6'>
             <strong>{`Total Price: `}</strong>
