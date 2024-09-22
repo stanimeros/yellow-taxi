@@ -1,5 +1,5 @@
 <?php  
-    require ("connect.php");
+    require("connect.php");
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $json_data = file_get_contents('php://input');
         $data = json_decode($json_data, true);
@@ -7,10 +7,7 @@
         $options = [];
         $price = getPricing($data['startId'] ?? '', $data['endId'] ?? '', $conn); //TODO 
 
-        if ($data['returnDate'] ?? null != null){
-            $rawReturnDate = $data['returnDate'];
-            $dateObject = DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $rawReturnDate);
-            $returnDate = $dateObject->format('Y-m-d H:i:s');
+        if ($data['returnDate'] != null){
             $price = $price * 1.8; //Apply 20% discount
         }
 

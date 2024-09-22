@@ -16,7 +16,7 @@
         }
 
         //Get place details from Google
-        require_once 'keys.php';
+        require_once("keys.php");
         $url = 'https://maps.googleapis.com/maps/api/place/details/json?'
         . 'placeid=' . urlencode($placeID)
         . '&fields=geometry'
@@ -67,7 +67,7 @@
         }
 
         //Get predictions from Google
-        require_once 'keys.php';
+        require_once("keys.php");
         $url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?'
         . 'input=' . urlencode($input)
         . '&types=establishment'
@@ -220,7 +220,7 @@
     }
 
     function getDirections($from_id, $to_id){
-        require_once 'keys.php';
+        require_once("keys.php");
         $url = 'https://maps.googleapis.com/maps/api/directions/json?'
         . 'origin=place_id:' . $from_id
         . '&destination=place_id:' . $to_id
@@ -233,17 +233,20 @@
         if(curl_errno($ch)){
             $error_msg = curl_error($ch);
             curl_close($ch);
-            echo json_encode(['status' => 'failed', 'message' => 'Error: ' . $error_msg]); 
-            $conn -> close();
-            exit();
+            // echo json_encode(['status' => 'failed', 'message' => 'Error: ' . $error_msg]); 
+            // $conn -> close();
+            // exit();
         }
         curl_close($ch);
 
         $data = json_decode($response, true);
-        if ($data['routes']){
+        if ($data != null && $data['routes']){
             $route = $data['routes'][0];
             $distance = $route['legs'][0]['distance']['text'];
             $duration = $route['legs'][0]['duration']['text'];
+        }else{
+            $distance = 10; //TODO
+            $duration = 10;
         }
 
         return ['distance' => $distance, 'duration' => $duration];
