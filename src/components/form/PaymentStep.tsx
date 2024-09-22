@@ -38,8 +38,8 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          startDestination: startDestination,
-          endDestinationId: endDestination,
+          startDestinationId: startDestination?.place_id,
+          endDestinationId: endDestination?.place_id,
           pickupDateTime: pickupDateTime?.toISOString(),
           returnDateTime: returnDateTime?.toISOString(),
           adults: adults,

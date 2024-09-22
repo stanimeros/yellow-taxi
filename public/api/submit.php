@@ -12,46 +12,27 @@
         $json_data = file_get_contents('php://input');
         $data = json_decode($json_data, true);
 
-        $rawPickupDate = $data['pickupDateTime'];
-        $dateObject = DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $rawPickupDate);
-        $pickupDate = $dateObject->format('Y-m-d H:i:s');
+        $rawPickupDateTime = $data['pickupDateTime'];
+        $dateObject = DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $rawPickupDateTime);
+        $pickupDateTime = $dateObject->format('Y-m-d H:i:s');
 
-        if ($data['returnDate']){
-            $rawReturnDate = $data['returnDate'];
-            $dateObject = DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $rawReturnDate);
-            $returnDate = $dateObject->format('Y-m-d H:i:s');
+        if ($data['returnDateTime']){
+            $rawReturnDateTime = $data['returnDateTime'];
+            $dateObject = DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $rawReturnDateTime);
+            $returnDateTime = $dateObject->format('Y-m-d H:i:s');
         }else{
            $returnDate = null;
         }
 
+        $phone = $data['areaCode'] . $data['phone'];
+
         $token = substr(sha1(rand()), 0, 32);
-        $sql = "INSERT INTO trips (from_place_id, to_place_id, pickup_date, return_date, adults, children, infants, name, email, phone, transport, comments, category, price, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?)";
+        $sql = "INSERT INTO trips (from_place_id, to_place_id, pickup_datetime, return_datetime, adults, children, option_id, name, email, phone, price, token, luggage, ferryName, airplaneName, infantSeats, babySeats, boosterSeats, bulkyLuggage, notes, coupons) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssiiissssssss", $data['from_place_id'], $data['to_place_id'], $pickupDate, $returnDate, $data['adults'], $data['children'], $data['infants'], $data['name'], $data['email'], $data['phone'], $data['transport'], $data['comments'] ,$data['category'], $data['price'], $token);
+        $stmt->bind_param("ssssiiisssssssssssss", $data['startDestinationId'], $data['endDestinationId'], $pickupDateTime, $returnDateTime, $data['adults'], $data['children'], $data['vehicleOption'], $data['name'], $data['email'], $phone, $data['price'], $token, $data['luggage'], $data['ferryName'], $data['airplaneName'], $data['infantSeats'], $data['babySeats'], $data['boosterSeats'], $data['bulkyLuggage'], $data['notes'], $data['coupons']);
         $stmt->execute();
         $id = $stmt->insert_id;
         $stmt->close();
-
-            startDestination: startDestination,
-            endDestinationId: endDestination,
-            pickupDateTime: pickupDateTime?.toISOString(),
-            returnDateTime: returnDateTime?.toISOString(),
-            adults: adults,
-            children: children,
-            luggage: luggage,
-            vehicleOption: vehicleOption,
-            email: email,
-            name: name,
-            areaCode: areaCode,
-            phone: phone,
-            ferryName: ferryName,
-            airplaneName: airplaneName,
-            infantSeats: infantSeats, 
-            babySeats: babySeats,
-            boosterSeats: boosterSeats,
-            bulkyLuggage: bulkyLuggage,
-            notes: notes,
-            coupons: coupons
 
         require_once("keys.php");
         // $stripePrivateKey = $keys['stripe_private_key'];

@@ -36,8 +36,11 @@ export const BookingForm: React.FC = () => {
   const [notes, setNotes] = useState('');
   const [price, setPrice] = useState<number | undefined>(undefined);
   const [coupons, setCoupons] = useState<string[]>([]);
-
-  const api = 'http://localhost/taxi/api'
+  const [api] = useState(
+		window.location.href.includes('localhost')
+			? 'http://localhost/taxi/public/api' //Development API
+			: '/api' //Production API
+	);
 
   const globalState: GlobalState = {
     api, language, setLanguage,
