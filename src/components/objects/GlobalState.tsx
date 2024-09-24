@@ -32,8 +32,8 @@ export type GlobalState = {
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   name: string;
   setName: React.Dispatch<React.SetStateAction<string>>;
-  areaCode: string;
-  setAreaCode: React.Dispatch<React.SetStateAction<string>>;
+  phoneCode: string;
+  setPhoneCode: React.Dispatch<React.SetStateAction<string>>;
   phone: string;
   setPhone: React.Dispatch<React.SetStateAction<string>>;
   ferryName: string;

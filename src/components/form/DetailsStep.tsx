@@ -10,9 +10,10 @@ import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { ChildSeatsPicker } from '../ui/child-seats-picker';
 import { Switch } from '../ui/switch';
 import { PersonIcon, EnvelopeClosedIcon, GlobeIcon, MobileIcon, Pencil2Icon } from '@radix-ui/react-icons';
-import { AreaCodePicker } from '../ui/area-code-picker';
+import { PhoneCodePicker } from '../ui/phone-code-picker';
 import { InputIcon } from '../ui/input-icon';
 import { PlaneIcon, ShipIcon } from 'lucide-react'
+import { toast } from 'sonner';
 
 interface DetailsStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -24,7 +25,7 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
     email, setEmail,
     name, setName,
     phone, setPhone,
-    areaCode, setAreaCode,
+    phoneCode, setPhoneCode,
     ferryName, setFerryName, 
     airplaneName, setAirplaneName,
     infantSeats, setInfantSeats, 
@@ -38,6 +39,11 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
   const [showAirplaneInput, setShowAirplaneInput] = useState(airplaneName.length > 0);
   const [showChildSeats, setShowChildSeats] = useState(infantSeats > 0 || babySeats > 0 || boosterSeats > 0);
 
+  const [missingName, setMissingName] = useState(false);
+  const [missingEmail, setMissingEmail] = useState(false);
+  const [missingPhoneCode, setMissingPhoneCode] = useState(false);
+  const [missingPhone, setMissingPhone] = useState(false);
+
   const handleTransportChange = (value: string) => {
     setShowFerryInput(value === 'ferry');
     setShowAirplaneInput(value === 'airplane');
@@ -45,6 +51,42 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
     setAirplaneName('');
     const nameInput = document.getElementById('transport-name') as HTMLInputElement;
     if (nameInput) nameInput.value = '';
+  };
+  
+  const handleNextStep = () => {
+    if (!name) {
+      setMissingName(true);
+      toast.error("Name is required", {
+        description: "Please enter your name",
+      });
+    }
+    
+    if (!email) {
+      setMissingEmail(true);
+      toast.error("Email is required", {
+        description: "Please enter your email",
+      });
+    }
+    
+    if (!phoneCode) {
+      setMissingPhoneCode(true);
+      toast.error("Phone Area Code is required", {
+        description: "Please select your phone area code",
+      });
+    }
+    
+    if (!phone) {
+      setMissingPhone(true);
+      toast.error("Phone Number is required", {
+        description: "Please enter your phone number",
+      });
+    }
+
+    if (!name || !email || !phoneCode || !phone){
+      return;
+    }
+
+    setStep(4);
   };
 
   return (
@@ -58,7 +100,7 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
         </div>
         <div className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className={`space-y-2 ${missingName ? 'text-red-500' : ''}`}>
               <Label htmlFor="fullName" className="flex items-center">
                 <PersonIcon className="w-4 h-4 mr-2" />
                 Full Name
@@ -67,10 +109,13 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
                 id="fullName"
                 placeholder="Enter your full name" 
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setMissingName(false);
+                }}
               />
             </div>
-            <div className="space-y-2">
+            <div className={`space-y-2 ${missingEmail ? 'text-red-500' : ''}`}>
               <Label htmlFor="email" className="flex items-center">
                 <EnvelopeClosedIcon className="w-4 h-4 mr-2" />
                 Email Address
@@ -80,22 +125,28 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
                 type="email" 
                 placeholder="Enter your email address" 
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setMissingEmail(false);
+                }}
               />
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="areaCode" className="flex items-center">
+            <div className={`space-y-2 ${missingPhoneCode ? 'text-red-500' : ''}`}>
+              <Label htmlFor="phoneCode" className="flex items-center">
                 <GlobeIcon className="w-4 h-4 mr-2" />
                 Phone Area Code
               </Label>
-              <AreaCodePicker
-                areaCode={areaCode}
-                setAreaCode={setAreaCode}
+              <PhoneCodePicker
+                value={phoneCode}
+                onChange={(value) => {
+                  setPhoneCode(value);
+                  setMissingPhoneCode(false);
+                }}
               />
             </div>
-            <div className="space-y-2">
+            <div className={`space-y-2 ${missingPhone ? 'text-red-500' : ''}`}>
               <Label htmlFor="phone" className="flex items-center">
                 <MobileIcon className="w-4 h-4 mr-2" />
                 Phone Number
@@ -105,7 +156,10 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
                 type="tel" 
                 placeholder="Enter your phone number" 
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  setMissingPhone(false);
+                }}
               />
             </div>
           </div>
@@ -197,7 +251,7 @@ export const DetailsStep: React.FC<DetailsStepProps> = ({ setStep, globalState }
           </div>
         </div>
       </div>
-      <Button onClick={() => setStep(4)} className="w-full mt-6">Next Step</Button>
+      <Button onClick={handleNextStep} className="w-full mt-6">Next Step</Button>
     </Card>
   );
 };

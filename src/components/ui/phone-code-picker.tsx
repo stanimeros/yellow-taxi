@@ -1,16 +1,16 @@
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 
-interface AreaCodePickerProps {
-  areaCode: string;
-  setAreaCode: React.Dispatch<React.SetStateAction<string>>;
+interface PhoneCodePickerProps {
+  value: string;
+  onChange: (value: string) => void;
 }
 
-export const AreaCodePicker: React.FC<AreaCodePickerProps> = ({ areaCode, setAreaCode }) => {
+export const PhoneCodePicker: React.FC<PhoneCodePickerProps> = ({ value, onChange }) => {
   return (
     <Select
-      value={areaCode}
-      onValueChange={(value) => setAreaCode(value)}
+      value={value}
+      onValueChange={(v) => onChange(v)}
     >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Select country code" />

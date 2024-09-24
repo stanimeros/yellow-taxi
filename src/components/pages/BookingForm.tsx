@@ -25,7 +25,7 @@ export const BookingForm: React.FC = () => {
   const [theme, setTheme] = useState('light');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [areaCode, setAreaCode] = useState('');
+  const [phoneCode, setPhoneCode] = useState('');
   const [phone, setPhone] = useState('');
   const [ferryName, setFerryName] = useState('');
   const [airplaneName, setAirplaneName] = useState('');
@@ -57,7 +57,7 @@ export const BookingForm: React.FC = () => {
     vehicleOption, setVehicleOption,
     email, setEmail,
     name, setName,
-    areaCode, setAreaCode,
+    phoneCode, setPhoneCode,
     phone, setPhone,
     ferryName, setFerryName,
     airplaneName, setAirplaneName,
