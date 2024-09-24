@@ -88,15 +88,13 @@ export const BookingForm: React.FC = () => {
         </div>
       </div>
       <div>
-        {step === 1 && <RouteStep setStep={setStep} globalState={globalState} />}
-        {step > 1 && 
-          <div className="flex flex-wrap gap-12 w-full">
-            {step === 2 && <OptionSteps setStep={setStep} globalState={globalState}/>}
-            {step === 3 && <DetailsStep setStep={setStep} globalState={globalState} />}
-            {step === 4 && <PaymentStep setStep={setStep} globalState={globalState}/>}
-            <TripSummary globalState={globalState}/>
-          </div>
-        }
+        <div className="flex flex-wrap gap-12 w-full">
+          {step === 1 && <RouteStep setStep={setStep} globalState={globalState} />}
+          {step === 2 && <OptionSteps setStep={setStep} globalState={globalState}/>}
+          {step === 3 && <DetailsStep setStep={setStep} globalState={globalState} />}
+          {step === 4 && <PaymentStep setStep={setStep} globalState={globalState}/>}
+          <TripSummary step={step} globalState={globalState}/>
+        </div>
       </div>
     </div>
   );
