@@ -14,7 +14,7 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ step, globalState }) =
     pickupDateTime, returnDateTime, 
     adults, children, duration, 
     distance, luggage, vehicleOption, 
-    email, name, areaCode, phone, 
+    email, name, phoneCode, phone, 
     ferryName, airplaneName, 
     infantSeats, babySeats, 
     boosterSeats, bulkyLuggage, notes,
@@ -31,12 +31,12 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ step, globalState }) =
             {pickupDateTime && <p>Pickup: {pickupDateTime.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</p>}
             {returnDateTime && <p>Return: {returnDateTime.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</p>}
             <p>{adults} adults{children > 0 && `, ${children} children`}{luggage > 0 ? ` and  ${luggage} luggage pieces` : ` and no luggage`}</p>
-            {(name || email || (areaCode && phone)) &&
+            {(name || email || (phoneCode && phone)) &&
               <>
                 <h4 className='text-l font-bold'>Book Details</h4>
                 {name && <p>{name}</p>}
                 {email && <p>{email}</p>}
-                {areaCode && phone && <p>{`(+${areaCode}) ${phone}`}</p>}
+                {phoneCode && phone && <p>{`(+${phoneCode}) ${phone}`}</p>}
               </>
             }
             {(ferryName || airplaneName || infantSeats > 0 ||

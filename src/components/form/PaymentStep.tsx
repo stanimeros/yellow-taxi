@@ -5,6 +5,7 @@ import { GlobalState } from '../objects/GlobalState';
 import { Checkbox } from '../ui/checkbox';
 import { Coupon } from '../ui/coupon';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface PaymentStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -19,7 +20,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
     returnDateTime, adults,
     children, luggage,
     vehicleOption, email,
-    name, areaCode, phone,
+    name, phoneCode, phone,
     ferryName, airplaneName,
     infantSeats, babySeats,
     boosterSeats, bulkyLuggage,
@@ -27,9 +28,18 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
   } = globalState;
 
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [missingAcceptTerms ,setMissingAcceptTerms] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    if (!acceptTerms){
+      setMissingAcceptTerms(true);
+      toast.error("You must accept the terms and conditions", {
+        description: "Please accept the terms and conditions to proceed",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -49,7 +59,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
           vehicleOptionId: vehicleOption?.id,
           email: email,
           name: name,
-          phone: `${areaCode} ${phone}`,
+          phone: `${phoneCode} ${phone}`,
           ferryName: ferryName,
           airplaneName: airplaneName,
           infantSeats: infantSeats, 
@@ -121,11 +131,14 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ setStep, globalState }
           <Checkbox
             id="terms"
             checked={acceptTerms}
-            onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
+            onCheckedChange={(checked) => {
+              setAcceptTerms(checked as boolean);
+              setMissingAcceptTerms(false);
+            }}
           />
           <label
             htmlFor="terms"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${missingAcceptTerms && 'text-red-500'}`}
           >
             I accept the terms and conditions
           </label>
