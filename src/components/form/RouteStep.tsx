@@ -9,6 +9,7 @@ import { TimePicker } from '../ui/time-picker';
 import { Card } from '../ui/card';
 import { GlobalState } from '../objects/GlobalState';
 import { LuggagePicker } from '../ui/luggage-picker';
+import { toast } from 'sonner';
 
 interface RouteStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -30,15 +31,26 @@ export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) =>
   const [missingEndDestination, setMissingEndDestination] = useState(false);
   const [missingPickupDate, setMissingPickupDate] = useState(false);
   
-  const handleSetStepToTwo = () => {
+  const handleNextStep = () => {
     if (!startDestination) {
       setMissingStartDestination(true);
+      toast.error("Start destination is required", {
+        description: "Please enter a start destination",
+      });
     }
+    
     if (!endDestination) {
       setMissingEndDestination(true);
+      toast.error("End destination is required", {
+        description: "Please enter an end destination",
+      });
     }
+    
     if (!pickupDateTime) {
       setMissingPickupDate(true);
+      toast.error("Pickup date is required", {
+        description: "Please select a pickup date",
+      });
     }
     
     if (isReturnEnabled && !returnDateTime){
@@ -164,7 +176,7 @@ export const RouteStep: React.FC<RouteStepProps> = ({ setStep, globalState }) =>
             />
           </div>
         </div>
-        <Button onClick={handleSetStepToTwo} className="w-full">Next Step</Button>
+        <Button onClick={handleNextStep} className="w-full">Next Step</Button>
       </div>
     </Card>
   );

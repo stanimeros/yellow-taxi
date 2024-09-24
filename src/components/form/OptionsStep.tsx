@@ -4,6 +4,8 @@ import { Card } from '../ui/card';
 import { GlobalState } from '../objects/GlobalState';
 import { VehicleOption } from '../objects/VehicleOption';
 import { Skeleton } from '../ui/skeleton';
+import { toast } from 'sonner';
+import { Label } from '../ui/label';
 
 interface OptionsStepProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -16,7 +18,9 @@ export const OptionSteps: React.FC<OptionsStepProps> = ({ setStep, globalState }
     coupons, returnDateTime, adults, children,
     setPrice, vehicleOption, setVehicleOption,
   } = globalState;
+
   const [options, setOptions] = useState<VehicleOption[]>([]);
+  const [missingSelectedOption, setMissingSelectedOption] = useState(false);
 
   useEffect(() => {
     const fetchoptions = async () => {
@@ -60,6 +64,18 @@ export const OptionSteps: React.FC<OptionsStepProps> = ({ setStep, globalState }
     fetchoptions();
   }, []);
 
+  const handleNextStep = () => {
+    if (!vehicleOption) {
+      setMissingSelectedOption(true);
+      toast.error("Selecting a preferred option is required", {
+        description: "Please select an option to continue",
+      });
+      return;
+    }
+  
+    setStep(3);
+  };
+
   return (
     <Card className="flex flex-col justify-between space-y-4 shadow-lg overflow-hidden p-6 flex-grow h-fit">
       <div className='flex flex-col space-y-4'>
@@ -98,8 +114,14 @@ export const OptionSteps: React.FC<OptionsStepProps> = ({ setStep, globalState }
                     : 'hover:bg-gray-50'
                 }`}
                 onClick={() => {
-                  setVehicleOption(option);
-                  setPrice(option.price);
+                  if (option == vehicleOption){
+                    setVehicleOption(null);
+                    setPrice(undefined);
+                  }else{
+                    setVehicleOption(option);
+                    setPrice(option.price);
+                    setMissingSelectedOption(false);
+                  }
                 }}
               >
                 <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
@@ -124,7 +146,10 @@ export const OptionSteps: React.FC<OptionsStepProps> = ({ setStep, globalState }
           )}
         </div>
       </div>
-      <Button onClick={() => setStep(3)} className="w-full">Next Step</Button>
+      {missingSelectedOption && (
+        <Label className="text-red-500">Please select a vehicle option</Label>
+      )}
+      <Button onClick={handleNextStep} className="w-full">Next Step</Button>
     </Card>
   );
 };

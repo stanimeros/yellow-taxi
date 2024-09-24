@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteStep } from '../form/RouteStep';
 import { Suggestion } from '../objects/Suggestion';
 import { GlobalState } from '../objects/GlobalState';
@@ -69,6 +69,13 @@ export const BookingForm: React.FC = () => {
     price, setPrice,
     coupons, setCoupons
   };
+
+  useEffect(() => {
+    if (step === 1) {
+      setVehicleOption(null);
+      setPrice(undefined);
+    }
+  }, [step]);
 
   return (
     <div className="m-[5%]">
