@@ -53,7 +53,7 @@ export function Map({ fromDestinationID, toDestinationID, setDuration, setDistan
   }, [isLoaded, fromDestinationID, toDestinationID, setDuration, setDistance]);
 
   return (
-    <div className='w-full h-full min-w-[300px] min-h-[400px] bg-gray-100'>
+    <div className='w-full h-full bg-gray-100'>
       {isLoaded && 
         <GoogleMap
         mapContainerStyle={style}

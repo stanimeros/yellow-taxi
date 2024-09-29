@@ -7,6 +7,8 @@ import { DetailsStep } from '../form/DetailsStep';
 import { PaymentStep } from '../form/PaymentStep';
 import { VehicleOption } from '../objects/VehicleOption';
 import { TripSummary } from '../form/TripSummary';
+import { Map } from '@/components/ui/map';
+import { Card } from '../ui/card';
 
 export const BookingForm: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -78,8 +80,16 @@ export const BookingForm: React.FC = () => {
   }, [step]);
 
   return (
-    <div className="m-[5%]">
-      <div className="w-full mb-6">
+    <div className="flex flex-col gap-4 m-[5%]">
+      <Card className='h-[300px] overflow-hidden'>
+        <Map
+          fromDestinationID={startDestination?.place_id || null}
+          toDestinationID={endDestination?.place_id || null}
+          setDuration={setDuration}
+          setDistance={setDistance}
+        />
+      </Card>
+      <div className="w-full">
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div 
             className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
@@ -94,14 +104,12 @@ export const BookingForm: React.FC = () => {
           <span className={step >= 3 ? "text-blue-600 font-semibold" : ""}>Payment</span>
         </div>
       </div>
-      <div>
-        <div className="flex flex-wrap gap-12 w-full">
-          {step === 1 && <RouteStep setStep={setStep} globalState={globalState} />}
-          {step === 2 && <OptionSteps setStep={setStep} globalState={globalState}/>}
-          {step === 3 && <DetailsStep setStep={setStep} globalState={globalState} />}
-          {step === 4 && <PaymentStep setStep={setStep} globalState={globalState}/>}
-          <TripSummary step={step} globalState={globalState}/>
-        </div>
+      <div className="flex flex-wrap gap-8 w-full">
+        {step === 1 && <RouteStep setStep={setStep} globalState={globalState} />}
+        {step === 2 && <OptionSteps setStep={setStep} globalState={globalState}/>}
+        {step === 3 && <DetailsStep setStep={setStep} globalState={globalState} />}
+        {step === 4 && <PaymentStep setStep={setStep} globalState={globalState}/>}
+        {step > 1 && <TripSummary globalState={globalState}/>}
       </div>
     </div>
   );
