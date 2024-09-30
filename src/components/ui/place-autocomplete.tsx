@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
 import { Suggestion } from '../objects/Suggestion';
 import { InputIcon } from './input-icon';
+import { MapPin } from 'lucide-react';
 
 interface PlaceAutocompleteProps {
   api: string;
@@ -78,10 +79,13 @@ export function PlaceAutocomplete({ api, placeholder = "Search places...", selec
             {suggestions.map((suggestion) => (
               <div
                 key={suggestion.place_id}
-                className="text-left p-2 hover:bg-gray-100 cursor-pointer overflow-hidden whitespace-nowrap text-ellipsis"
+                className="flex flex-nowrap items-center p-2 gap-2 hover:bg-gray-100 cursor-pointer overflow-hidden"
                 onClick={() => handleSuggestionClick(suggestion)}
               >
-                {suggestion.description}
+                <MapPin className='w-4'/>
+                <div className='overflow-hidden text-ellipsis w-full whitespace-nowrap'>
+                  {suggestion.description}
+                </div>
               </div>
             ))}
           </div>

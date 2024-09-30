@@ -89,7 +89,7 @@ export const OptionSteps: React.FC<OptionsStepProps> = ({ setStep, globalState }
           {options.length === 0 ? (
             // Skeleton loading state
             Array.from({ length: 3 }).map((_, index) => (
-              <div key={index} className="flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg">
+              <div key={index} className="flex flex-col gap-10 md:flex-row items-center justify-between p-4 border rounded-lg">
                 <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0 w-full">
                   <Skeleton className="w-48 h-32 rounded-md mr-0 md:mr-4 mb-4 md:mb-0" />
                   <div className="w-full">
