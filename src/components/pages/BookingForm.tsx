@@ -104,7 +104,7 @@ export const BookingForm: React.FC = () => {
           <span className={step >= 3 ? "text-blue-600 font-semibold" : ""}>Payment</span>
         </div>
       </div>
-      <div className="flex flex-wrap gap-8 w-full">
+      <div className="flex flex-wrap-reverse md:flex-wrap gap-4 w-full">
         {step === 1 && <RouteStep setStep={setStep} globalState={globalState} />}
         {step === 2 && <OptionSteps setStep={setStep} globalState={globalState}/>}
         {step === 3 && <DetailsStep setStep={setStep} globalState={globalState} />}
