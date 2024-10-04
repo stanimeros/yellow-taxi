@@ -18,7 +18,7 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
   } = globalState;
 
   return (
-    <Card className="flex flex-col justify-between shadow-lg overflow-hidden w-full md:w-fit h-fit bg-white rounded-lg p-4 space-y-4">
+    <Card className="flex flex-col justify-between shadow-lg overflow-hidden w-full md:w-fit min-w-[320px] h-fit bg-white rounded-lg p-4 space-y-4">
       {/* Trip Summary */}
       <div className="text-2xl font-bold text-gray-900">Trip Summary</div>
 
@@ -75,20 +75,22 @@ export const TripSummary: React.FC<TripSummaryProps> = ({ globalState }) => {
       )}
 
       {/* Price and Distance/Duration */}
-      <div className="space-y-4 pt-10">
-        {price && (
-          <div className="text-center space-y-1">
-            <div className="text-2xl font-semibold text-gray-900">Total Price:</div>
-            <div className="text-3xl font-bold text-green-600">{`${price.toFixed(2)}€`}</div>
-            <div className="text-sm text-gray-500">(including VAT)</div>
-          </div>
-        )}
-        {distance && duration && (
-          <div className="text-center text-sm text-gray-600">
-            Distance: {distance} | Duration: {duration}
-          </div>
-        )}
-      </div>
+      {vehicleOption && (  
+          <div className="space-y-4 pt-10">
+          {price && (
+            <div className="text-center space-y-1">
+              <div className="text-2xl font-semibold text-gray-900">Total Price:</div>
+              <div className="text-3xl font-bold text-green-600">{`${price.toFixed(2)}€`}</div>
+              <div className="text-sm text-gray-500">(including VAT)</div>
+            </div>
+          )}
+          {distance && duration && (
+            <div className="text-center text-sm text-gray-600">
+              Distance: {distance} | Duration: {duration}
+            </div>
+          )}
+        </div>
+      )}
     </Card>
   );
 }
